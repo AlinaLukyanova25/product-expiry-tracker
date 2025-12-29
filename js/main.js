@@ -971,7 +971,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     closeModalReturn()
   }
 
- alert('привет хай хихи')
+ alert('привет хай супер')
 
   const formSearchBtn = document.querySelector('.form-search__btn')
   elementCheck(formSearchBtn, 'кнопка поиска')
@@ -982,6 +982,9 @@ document.addEventListener('DOMContentLoaded', async function () {
     e.preventDefault()
     const needProduct = searchInput.value
     if (!needProduct) return
+    searchInput.removeEventListener('blur', inputBlur)
+    searchInput.blur()
+    formSearchClear.style.display = 'none'
 
     const allSection = [
       sectionProductsAll,
@@ -1023,6 +1026,7 @@ document.addEventListener('DOMContentLoaded', async function () {
       formSearchClear.style.display = 'none'
       renderAllProducts()
     }
+    
   })
 
   searchInput.addEventListener('focus', function (e) {
@@ -1030,6 +1034,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     formSearchClear.style.left = coords.x + coords.width - 30 + 'px'
     let heightInput = coords.height / 2
     formSearchClear.style.top = Math.round(coords.y + Math.round(heightInput)) - 10 + 'px'
+    formSearchClear.style.display = 'block'
   })
 
   formSearchClear.addEventListener('click', (e) => {
@@ -1043,13 +1048,15 @@ document.addEventListener('DOMContentLoaded', async function () {
     formSearchClear.style.display = 'none'
   })
 
-  searchInput.addEventListener('blur', function (e) {
+  searchInput.addEventListener('blur', inputBlur)
+
+  function inputBlur() {
     if (searchInput.value === '') {
       formSearchClear.style.display = 'none'
     } else {
       searchInput.focus()
     }
-  })
+  }
   
   async function filterNeedProducts(section, inputValue) {
     const products = await getAllProducts()
@@ -1139,6 +1146,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   }
 
 })
+
 
 
 
