@@ -971,7 +971,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     closeModalReturn()
   }
 
- alert('привет хай супер')
+ alert('привет')
 
   const formSearchBtn = document.querySelector('.form-search__btn')
   elementCheck(formSearchBtn, 'кнопка поиска')
@@ -981,10 +981,12 @@ document.addEventListener('DOMContentLoaded', async function () {
   function searchProducts(e) {
     e.preventDefault()
     const needProduct = searchInput.value
+    if (searchInput.value === '') return
     if (!needProduct) return
     searchInput.removeEventListener('blur', inputBlur)
     searchInput.blur()
     formSearchClear.style.display = 'none'
+    searchInput.removeEventListener('input', inputEvent)
 
     const allSection = [
       sectionProductsAll,
@@ -1017,8 +1019,9 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
   });
 
-  searchInput.addEventListener('input', function (e) {
-    
+  searchInput.addEventListener('input', inputEvent)
+
+  function inputEvent(e) {
     if (searchInput.value !== '') {
       formSearchClear.style.display = 'block'
       renderAllProducts()
@@ -1026,8 +1029,7 @@ document.addEventListener('DOMContentLoaded', async function () {
       formSearchClear.style.display = 'none'
       renderAllProducts()
     }
-    
-  })
+  }
 
   searchInput.addEventListener('focus', function (e) {
     let coords = searchInput.getBoundingClientRect()
@@ -1146,6 +1148,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   }
 
 })
+
 
 
 
