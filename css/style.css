@@ -888,7 +888,14 @@ section {
 
   .modal-remove.open-remove {
     max-width: 320px;
-    max-height: 320px;
+  }
+
+  .modal-remove__title {
+    font-size: 20px;
+  }
+
+  .modal-remove__descr {
+    font-size: var(--fs16);
   }
 
   .date-end {
@@ -910,4 +917,5 @@ section {
     top: 6px;
   }
 }
+
 
