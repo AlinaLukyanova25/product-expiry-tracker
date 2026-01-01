@@ -50,11 +50,13 @@ function getDaysText(daysLeft) {
   
 export function createProductCard(card) {
     const categoryDisplay = productCategoryTranslation[card.category] || card.category
-    const daysLeft = calculateDateDifference(card.expiryDate)
+    const daysLeft = calculateDateDifference(card.expiryDate) || 'Установите дату'
 
     let daysText = getDaysText(daysLeft)
 
     const percent = setWidthProgrssBar(card)
+
+  const expiryDate = formatDateCard(card.expiryDate) || 'Не выбрано'
     
     return `
       <button class="btn-remove section__btn-remove">&#128465;&#65039;</button>
@@ -74,7 +76,7 @@ export function createProductCard(card) {
           </div>
         </div>
         <div class="section__item-bottom">
-          <div>До ${formatDateCard(card.expiryDate)}</div>
+          <div>До ${expiryDate}</div>
           <div>${categoryDisplay}</div>
         </div>
         <div>
@@ -82,12 +84,14 @@ export function createProductCard(card) {
 }
 
 export function calculateDateDifference(date) {
+  if (!date) return null
     let now = new Date()
     let difference = new Date(date) - now
     return Math.ceil(difference / 86400000)
 }
 
 export function formatDateCard(date) {
+  if (!date) return null
     date = new Date(date)
     const day = String(date.getDate()).padStart(2, '0')
     const month = String(date.getMonth() + 1).padStart(2, '0')
@@ -122,4 +126,5 @@ function setWidthProgrssBar(product) {
     }
 
     return Math.round(subtractionPercent) + '%'
+
 }
