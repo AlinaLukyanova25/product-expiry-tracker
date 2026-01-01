@@ -970,8 +970,10 @@ document.addEventListener('DOMContentLoaded', async function () {
     product.shelfLife = (new Date(modalDateInput.value) - new Date(dateProdInput.value)) / 86400000
     product.inArchive = false
 
-    if (modalReturn.querySelector('.image-preview img').src !== product.image) {
-      product.image = modalReturn.querySelector('.image-preview img').src
+    if (modalReturn.querySelector('.image-preview img')) {
+        if (modalReturn.querySelector('.image-preview img').src !== product.image) {
+          product.image = modalReturn.querySelector('.image-preview img').src
+        }
     }
 
     await updateProduct(product)
@@ -1159,6 +1161,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   }
 
 })
+
 
 
 
