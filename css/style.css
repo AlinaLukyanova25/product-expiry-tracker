@@ -546,7 +546,7 @@ section {
   width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-around;
 }
 
 .calendar-item {
@@ -566,6 +566,7 @@ section {
 .calendar-item__bottom {
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 
 .calendar-item__bottom div:first-child {
@@ -836,7 +837,6 @@ section {
   .section__item-top {
     display: flex;
     flex-direction: column;
-    gap: 6px;
     flex: 1;
     min-width: 0;
   }
@@ -848,13 +848,23 @@ section {
 
   .section__item-bottom div:first-child {
     flex-shrink: 0;
+    margin-right: 7px;
+  }
+
+  .section__item-bottom div:last-child,
+  .calendar-item__bottom div:last-child{
+    font-size: 10px;
+  }
+
+  .section__item-top p {
+    font-size: var(--fs12);
   }
 
   .card__title {
     margin: 0;
     font-weight: var(--medium);
-    line-height: 1.3;
-    font-size: var(--fs16);
+    font-size: 15px;
+    padding-right: 12px;
   }
 
   .card .image-preview {
@@ -924,7 +934,14 @@ section {
     left: var(--space-10);
     top: 6px;
   }
+
+  .image-preview:not(:has(img))::before {font-size: 20px;}
+
+  .calendar-item__bottom {
+    font-size: var(--fs12);
+  }
 }
+
 
 
 
