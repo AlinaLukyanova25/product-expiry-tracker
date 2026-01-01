@@ -1149,7 +1149,11 @@ document.addEventListener('DOMContentLoaded', async function () {
   btnAddToForm.addEventListener('click', transferToAddForm)
 
   function transferToAddForm() {
-    sectionForm.style.display = 'block'
+    if (window.innerWidth < 814) {
+       sectionForm.style.display = 'flex'
+      } else {
+      sectionForm.style.display = 'block'
+    }
     sectionHero.style.display = 'none'
 
     const link = document.querySelector('a[href="#form"]');
@@ -1162,6 +1166,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   }
 
 })
+
 
 
 
