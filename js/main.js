@@ -792,6 +792,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     arrow.addEventListener('click', (e) => {
       e.preventDefault()
       formCalculator.classList.remove('open')
+      document.body.classList.remove('no-scroll');
     })
 
       const modalCalcDateStart = document.getElementById('modal-date-start')
@@ -1161,6 +1162,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   }
 
 })
+
 
 
 
