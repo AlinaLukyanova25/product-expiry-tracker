@@ -609,14 +609,13 @@ document.addEventListener('DOMContentLoaded', async function () {
       return
     }
 
-    const ok = e.target.closest('.ok')
+    const ok = e.target.closest('#ok-one')
     const products = await getAllProducts()
 
     if (ok) {
       const id = +ok.dataset.rem
       const product = products.find(prod => prod.id === id)
       console.log(product)
-      alert('huhu')
 
       if (product) {
         removeProduct(product.id)
@@ -1122,17 +1121,18 @@ document.addEventListener('DOMContentLoaded', async function () {
           return
         }
 
-          const ok = e.target.closest('.ok')
+          const ok = e.target.closest('#ok-all')
           if (!ok) return
           element.querySelectorAll('li').forEach(prodCard => {
             const id = +prodCard.dataset.productId
             const product = products.find(prod => prod.id === id)
             console.log(product)
-            alert('Другое')
 
-            removeProducts(id)
-            closeModalRemove()
-        });
+            if (product) {
+              removeProducts(id)
+            }
+          });
+        closeModalRemove()
         renderAllProducts()
         })
       }
@@ -1168,6 +1168,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   }
 
 })
+
 
 
 
