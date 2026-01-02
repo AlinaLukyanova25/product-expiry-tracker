@@ -21,8 +21,8 @@ export const productCategoryTranslation = {
 }
 
 function getDaysText(daysLeft) {
+  if (daysLeft === 0) return 'Истекает сегодня!'
   daysLeft = parseInt(daysLeft)
-    if (daysLeft === 0) return 'Истекает сегодня!'
     if (daysLeft === 1) return 'Остался 1 день'
   if (daysLeft > 0) {
 
@@ -50,9 +50,14 @@ function getDaysText(daysLeft) {
   
 export function createProductCard(card) {
     const categoryDisplay = productCategoryTranslation[card.category] || card.category
-    const daysLeft = calculateDateDifference(card.expiryDate) || 'Установите дату'
+    const daysLeft = calculateDateDifference(card.expiryDate)
 
-    let daysText = getDaysText(daysLeft)
+    let daysText
+    if (daysLeft) {
+    daysText = getDaysText(daysLeft)
+    } else {
+    daysText = 'Установите дату'
+    }
 
     const percent = setWidthProgrssBar(card)
 
@@ -115,6 +120,7 @@ export function creaeteArchiveCard(product) {
 
 function setWidthProgrssBar(product) {
     const allTime = new Date(product.expiryDate) - new Date(product.productionDate)
+    if (!allTime) return 0 + '%'
     console.log(product, allTime / 86400000)
     const remainingTime = new Date(product.expiryDate) - new Date()
     console.log(remainingTime / 86400000)
@@ -128,3 +134,4 @@ function setWidthProgrssBar(product) {
     return Math.round(subtractionPercent) + '%'
 
 }
+
