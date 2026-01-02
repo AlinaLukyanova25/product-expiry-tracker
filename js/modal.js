@@ -46,7 +46,7 @@ export function createModalRemove(card, id) {
     <p class="modal-remove__descr">Вы действительно хотите удалить продукт?</p>
     <div class="modal-remove__buttons">
       <button class="btn modal-remove__btn cancel">Отмена</button>
-      <button class="btn modal-remove__btn ok" data-rem=${id}>Да</button>
+      <button class="btn modal-remove__btn ok" data-rem="${id}" id="ok-one">Да</button>
     </div>
     `
 }
@@ -56,7 +56,7 @@ export function createModalRemoveAll(section) {
     <p class="modal-remove__descr">Вы действительно хотите удалить все продукты в секции "${section}"?</p>
     <div class="modal-remove__buttons">
       <button class="btn modal-remove__btn cancel">Отмена</button>
-      <button class="btn modal-remove__btn ok">Да</button>
+      <button class="btn modal-remove__btn ok" id="ok-all">Да</button>
     </div>
     `
 }
@@ -106,4 +106,5 @@ function createModalReturn(product, id) {
     `
 
 }
+
 
