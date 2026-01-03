@@ -740,6 +740,10 @@ section {
   .section__list {
     gap: var(--space-10);
   }
+
+  .image-preview {
+    margin-top: 14px;
+  }
 }
 
 @media (max-width: 814px) {
@@ -941,6 +945,7 @@ section {
     font-size: var(--fs12);
   }
 }
+
 
 
 
