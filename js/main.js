@@ -1032,45 +1032,44 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     let needProducts = []
 
-    allSection.forEach(section => {
+    for (const section of allSection) {
       if (section.style.display === 'block') {
-        // if ()
         if (section.classList.contains('section__archive')) {
           needProducts = products.filter(prod => prod.inArchive)
-          filterNeedProducts(needProducts, section, needProduct)
+          await filterNeedProducts(needProducts, section, needProduct)
           needProducts = []
-          return
+          break
         }
 
         if (section.classList.contains('section__expired')) {
           needProducts = products.filter(prod => calculateDateDifference(prod.expiryDate) <= 0 && !prod.inArchive)
-          filterNeedProducts(needProducts, section, needProduct)
+          await filterNeedProducts(needProducts, section, needProduct)
           needProducts = []
-          return
+          break
         }
 
         if (section.classList.contains('section__soon')) {
           needProducts = products.filter(prod => calculateDateDifference(prod.expiryDate) <= 3 && calculateDateDifference(prod.expiryDate) > 0 && !prod.inArchive)
-          filterNeedProducts(needProducts, section, needProduct)
+          await filterNeedProducts(needProducts, section, needProduct)
           needProducts = []
-          return
+          break
         }
 
         if (section.classList.contains('section__fresh')) {
           needProducts = products.filter(prod => calculateDateDifference(prod.expiryDate) > 3 && !prod.inArchive)
-          filterNeedProducts(needProducts, section, needProduct)
+          await filterNeedProducts(needProducts, section, needProduct)
           needProducts = []
-          return
+          break
         }
 
         if (section.classList.contains('section__all')) {
           needProducts = products.filter(prod => !prod.inArchive)
-          filterNeedProducts(needProducts, section, needProduct)
+          await filterNeedProducts(needProducts, section, needProduct)
           needProducts = []
-          return
+          break
         }
       }
-    });
+    };
     } finally {
       setTimeout(() => isSearching = false, 300)
     }
@@ -1127,7 +1126,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
   }
   
-  function filterNeedProducts(arr, section, inputValue) {
+  async function filterNeedProducts(arr, section, inputValue) {
     if (!arr) return
     const ul = section.querySelector('ul')
     ul.innerHTML = ''
@@ -1222,6 +1221,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   }
 
 })
+
 
 
 
