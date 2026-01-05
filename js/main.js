@@ -1,3 +1,5 @@
+window.scrollPosition = 0
+
 import {
   openDatabase,
   addProduct,
@@ -308,10 +310,10 @@ document.addEventListener('DOMContentLoaded', async function () {
   modalRemove.addEventListener('click', removeOrCloseModal)
   backdropReturn.addEventListener('click', closeModalReturn)
   
-
   async function openModal(e) {
     const card = e.target.closest('.section__item')
-    if (!card) return 
+    if (!card) return
+    window.scrollPosition = e.pageY - e.clientY
     const id = +card.dataset.productId
     const products = await getAllProducts()
     const product = products.find(prod => prod.id === id)
@@ -320,6 +322,8 @@ document.addEventListener('DOMContentLoaded', async function () {
       console.error('Product не найден')
       return
     }
+
+    document.body.classList.add('no-scroll')
 
     if (e.target.closest('.section__btn-remove')) {
       const htmlModalRemove = createModalRemove(product, card.dataset.productId)
@@ -334,7 +338,7 @@ document.addEventListener('DOMContentLoaded', async function () {
       document.body.classList.add('no-scroll');
       return
     }
-
+    
     const arrow = createArrow()
     if (!arrow) elementCheck(arrow, 'стрелка')
   
@@ -342,27 +346,29 @@ document.addEventListener('DOMContentLoaded', async function () {
     modal.innerHTML = html
     modal.classList.add('open')
     modal.append(arrow)
+
     arrow.addEventListener('click', (e) => {
       e.preventDefault()
-      modal.classList.remove('open')
-      document.body.classList.remove('no-scroll');
+      closeModal()
     })
-    document.body.classList.add('no-scroll');
   }
 
   function closeModal() {
     modal.classList.remove('open')
-    document.body.classList.remove('no-scroll');
+    document.body.classList.remove('no-scroll')
+    window.scrollTo(0, window.scrollPosition)
   }
 
   function closeModalRemove() {
     modalRemove.classList.remove('open-remove')
     document.body.classList.remove('no-scroll');
+      window.scrollTo(0, window.scrollPosition)
   }
 
   function closeModalReturn() {
     modalReturn.classList.remove('open-return')
     document.body.classList.remove('no-scroll');
+      window.scrollTo(0, window.scrollPosition)
   }
 
   modal.addEventListener('click', downloadImage)
@@ -431,8 +437,6 @@ document.addEventListener('DOMContentLoaded', async function () {
     } catch(error) {
         console.error('Ошибка при загрузке фото:', error)
       }
-      
-      await renderAllProducts()
       return 
     }
   }
@@ -464,7 +468,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     })
   }
   
-  modal.addEventListener('submit', async function(e) {
+  modal.addEventListener('submit', async function (e) {
     e.preventDefault()
 
     const modalDateInput = document.getElementById('modal-date')
@@ -498,13 +502,14 @@ document.addEventListener('DOMContentLoaded', async function () {
       console.log('Продукт обновлен:', productToUpdate)
       if (modal.querySelector('.image-preview img')) {
         if (modal.querySelector('.image-preview img').src !== productToUpdate.image) {
-        productToUpdate.image = modal.querySelector('.image-preview img').src
+          productToUpdate.image = modal.querySelector('.image-preview img').src
         }
       }
       await updateProduct(productToUpdate)
-      await renderAllProducts()
-
       closeModal()
+      await renderAllProducts()
+      window.scrollTo(0, window.scrollPosition)
+      
     } else {
       console.error('Продукт не найден с id:', id)
     }
@@ -1149,6 +1154,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   async function removeAllProducts(e) {
     e.preventDefault()
     if (!e.target.closest('.form__btn-remove')) return
+    window.scrollPosition = 0
 
     const products = await getAllProducts()
 
@@ -1221,6 +1227,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   }
 
 })
+
 
 
 
