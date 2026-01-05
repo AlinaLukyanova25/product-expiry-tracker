@@ -69,9 +69,10 @@ export function openModalReturn(product, id, modalReturn) {
 
     modalReturn.append(arrow)
     arrow.addEventListener('click', (e) => {
-      e.preventDefault()
-      modalReturn.classList.remove('open-return')
-        document.body.classList.remove('no-scroll');
+    e.preventDefault()
+    modalReturn.classList.remove('open-return')
+    document.body.classList.remove('no-scroll');
+    window.scrollTo(0, window.scrollPosition)
     })
 }
 
@@ -106,5 +107,6 @@ function createModalReturn(product, id) {
     `
 
 }
+
 
 
