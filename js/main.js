@@ -598,7 +598,7 @@ document.addEventListener('DOMContentLoaded', async function () {
       }
       await updateProduct(productToUpdate)
       await renderAllProducts()
-      closeModal(document.querySelector(`[data-product-id="${id}"]`))
+      closeModal(menu)
       window.scrollTo(0, window.scrollPosition)
       
     } else {
@@ -768,7 +768,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
       await renderAllProducts()
 
-      closeModal(document.querySelector('.section__item'))
+      closeModal(menu)
     }
   }
 
@@ -1093,8 +1093,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     await renderAllProducts()
 
-    closeModalReturn(document.querySelector('.section__item'))
-    sectionArchive.focus()
+    closeModalReturn(sectionArchive.querySelector('.section__item'))
   }
 
   const formSearchBtn = document.querySelector('.form-search__btn')
@@ -1325,6 +1324,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   }
 
 })
+
 
 
 
