@@ -306,7 +306,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   backdropCheck(backdropReturn)
 
   document.addEventListener('click', openModal)
-  backdrop.addEventListener('click', closeModal)
+  backdrop.addEventListener('click', (e) => closeModal(''))
   backdropRemove.addEventListener('click', closeModalRemove)
   modalRemove.addEventListener('click', removeOrCloseModal)
   backdropReturn.addEventListener('click', closeModalReturn)
@@ -350,14 +350,15 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     arrow.addEventListener('click', (e) => {
       e.preventDefault()
-      closeModal()
+      closeModal(card)
     })
   }
 
-  function closeModal() {
+  function closeModal(card) {
     modal.classList.remove('open')
     document.body.classList.remove('no-scroll')
     window.scrollTo(0, window.scrollPosition)
+    if (card) card.focus()
   }
 
   function closeModalRemove() {
@@ -371,6 +372,94 @@ document.addEventListener('DOMContentLoaded', async function () {
     document.body.classList.remove('no-scroll');
       window.scrollTo(0, window.scrollPosition)
   }
+
+  document.addEventListener('keydown', function (e) {
+    let card;
+    if (e.target.closest('.section__btn-remove')) {
+      card = e.target.closest('.section__btn-remove')
+      if (e.key === 'Enter' || e.keyCode === 13) {
+      card.click()
+      modalRemove.focus()
+    }
+    if (e.key === 'Tab') {
+      modalRemove.focus()
+    }
+      return
+    }
+
+    if (e.target.closest('.section__archive')) {
+      card = e.target.closest('.section__item')
+      if (e.key === 'Enter' || e.keyCode === 13) {
+      card.click()
+      modalReturn.focus()
+    }
+    if (e.key === 'Tab') {
+      modalReturn.focus()
+      }
+      return
+    }
+
+    if (e.target.closest('.section__item')) {
+      card = e.target.closest('.section__item')
+      if (e.key === 'Enter' || e.keyCode === 13) {
+      card.click()
+      modal.focus()
+    }
+    if (e.key === 'Tab') {
+      modal.focus()
+      }
+      return
+    }
+
+    if (e.target.closest('.image-preview')) {
+      card = e.target.closest('.image-preview')
+      if (e.key === 'Enter' || e.keyCode === 13) {
+      card.click()
+      }
+      return
+    }
+
+    if (e.target.closest('.form__btn-remove')) {
+      if (e.key === 'Enter' || e.keyCode === 13) {
+      modalRemove.focus()
+    }
+    if (e.key === 'Tab') {
+      modalRemove.focus()
+      }
+      return
+    }
+
+    if (e.target.closest('.calendar__day')) {
+      card = e.target.closest('.calendar__day')
+      if (e.key === 'Enter' || e.keyCode === 13) {
+      card.click()
+      document.querySelector('.modal-calendar').focus()
+    }
+    if (e.key === 'Tab') {
+      document.querySelector('.modal-calendar').focus()
+      }
+      return
+    }
+
+    if (e.target.closest('.calendar-item')) {
+      card = e.target.closest('.calendar-item')
+      if (e.key === 'Enter' || e.keyCode === 13) {
+        card.click()
+        modal.focus()
+      }
+      if (e.key === 'Tab') {
+      modal.focus()
+      }
+      return
+    }
+
+    if (e.target.closest('.modal__calculator')) {
+      if (e.key === 'Tab') {
+      document.querySelector('.modal-form-calculator').focus()
+      }
+      return
+    }
+  })
 
   modal.addEventListener('click', downloadImage)
 
@@ -508,7 +597,7 @@ document.addEventListener('DOMContentLoaded', async function () {
       }
       await updateProduct(productToUpdate)
       await renderAllProducts()
-      closeModal()
+      closeModal(document.querySelector(`[data-product-id="${id}"]`))
       window.scrollTo(0, window.scrollPosition)
       
     } else {
@@ -621,6 +710,8 @@ document.addEventListener('DOMContentLoaded', async function () {
   async function removeOrCloseModal(e) {
     const cancel = e.target.closest('.cancel')
     if (cancel) {
+      const id = document.querySelector('#ok-one').dataset.rem
+      document.querySelector(`[data-product-id="${id}"]`).focus()
       closeModalRemove()
       return
     }
@@ -676,7 +767,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
       await renderAllProducts()
 
-      closeModal()
+      closeModal(document.querySelector(`[data-product-id="${id}"]`))
     }
   }
 
@@ -743,6 +834,7 @@ document.addEventListener('DOMContentLoaded', async function () {
       e.preventDefault()
       newFormCalculator.classList.remove('open')
       modal.classList.add(open)
+      calcButton.focus()
       })
 
       const modalCalcDateStart = document.getElementById('modal-date-start')
@@ -784,6 +876,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         modal.date.value = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
         newFormCalculator.classList.remove('open')
         modal.classList.add(open)
+        calcButton.focus()
       } else {
         validateCalculator(modalCalcDateStart, modalDays, modalMonths)
       }
@@ -792,23 +885,25 @@ document.addEventListener('DOMContentLoaded', async function () {
   }
 
     if (this.classList.contains('form__add')) {
-      if (!e.target.closest('.modal__calculator')) return
+      const calcButton = e.target.closest('.modal__calculator')
+      if (!calcButton) return
       e.preventDefault()
       const formCalculator = document.querySelector('.modal-form-calculator')
       modalCheck(formCalculator)
       const html = createModalCalculator()
       const arrow = createArrow()
       if (!arrow) elementCheck(arrow, 'стрелка')
+      formCalculator.innerHTML = html
+      formCalculator.prepend(arrow)
 
       formCalculator.classList.add('open')
       document.body.classList.add('no-scroll');
-      formCalculator.innerHTML = html
-
-      formCalculator.prepend(arrow)
+      
     arrow.addEventListener('click', (e) => {
       e.preventDefault()
       formCalculator.classList.remove('open')
       document.body.classList.remove('no-scroll');
+      calcButton.focus()
     })
 
       const modalCalcDateStart = document.getElementById('modal-date-start')
@@ -851,6 +946,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         dateInput.value = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
         formCalculator.classList.remove('open')
         document.body.classList.remove('no-scroll');
+        calcButton.focus()
       } else {
         validateCalculator(modalCalcDateStart, modalDays, modalMonths)
       }
@@ -999,9 +1095,8 @@ document.addEventListener('DOMContentLoaded', async function () {
     await renderAllProducts()
 
     closeModalReturn()
+    sectionArchive.focus()
   }
-
- alert('привет')
 
   const formSearchBtn = document.querySelector('.form-search__btn')
   elementCheck(formSearchBtn, 'кнопка поиска')
@@ -1179,6 +1274,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         modalRemove.addEventListener('click', (e) => {
           const cancel = e.target.closest('.cancel')
           if (cancel) {
+          document.querySelector('.form__btn-remove').focus()
           closeModalRemove()
           return
         }
@@ -1230,6 +1326,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   }
 
 })
+
 
 
 
