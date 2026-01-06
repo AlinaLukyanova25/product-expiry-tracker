@@ -46,6 +46,11 @@
   box-sizing: border-box;
 }
 
+*:focus-visible {
+  outline: 1px solid var(--blue);
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1)
+}
+
 a {
   text-decoration: none;
   color: black;
@@ -204,6 +209,12 @@ section {
   font-weight: var(--semibold);
   margin-bottom: var(--space-8);
   font-size: var(--fs18);
+}
+
+.card:focus-visible {
+  outline: none;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
 }
 
 .setcion__item-content {
@@ -514,6 +525,13 @@ section {
 }
 
 .calendar__day.empty { background-color: var(--light-marble); }
+
+.calendar__day:focus-visible,
+.calendar__day.empty:focus-visible {
+  outline: none;
+  box-shadow: none;
+  background-color: var(--very-light-grey);
+}
 
 .calendar__day.today {
   border-color: var(--green);
@@ -951,6 +969,7 @@ section {
     font-size: var(--fs12);
   }
 }
+
 
 
 
