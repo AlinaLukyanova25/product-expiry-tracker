@@ -5,7 +5,7 @@ import {
 } from './storage.js'
 
 import {
-  dateInput
+  DateUtils
 } from './state.js'
 
 import {
@@ -134,6 +134,9 @@ document.addEventListener('DOMContentLoaded', async function () {
   const nameProduct = document.getElementById('name-product');
   const categoryProduct = document.getElementById('category');
   const dateManufactureProduct = document.getElementById('date-manufacture')
+  const dateInput = document.getElementById('end-date');
+
+  DateUtils.initDateInputMin(dateInput)
 
   if (dateManufactureProduct) {
     dateManufactureProduct.setAttribute('max', dateStartString)
@@ -1317,6 +1320,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   }
 
 })
+
 
 
 
