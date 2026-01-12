@@ -49,7 +49,7 @@ function getDaysText(daysLeft) {
 
 
   
-export function createProductCard(card) {
+export function createProductCardComponent(card) {
     const categoryDisplay = productCategoryTranslation[card.category] || card.category
     const daysLeft = calculateDateDifference(card.expiryDate)
 
@@ -99,7 +99,7 @@ export function formatDateCard(date) {
     return `${day}.${month}.${date.getFullYear()}`
 }
 
-export function creaeteArchiveCard(product) {
+export function creaeteArchiveCardComponent(product) {
     const categoryDisplay = productCategoryTranslation[product.category] || product.category
 
     return `
@@ -130,6 +130,7 @@ function setWidthProgrssBar(product) {
     return Math.round(subtractionPercent) + '%'
 
 }
+
 
 
 
