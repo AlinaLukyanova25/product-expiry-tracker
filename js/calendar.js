@@ -8,7 +8,7 @@ import {
 } from './products.js'
 
 import {
-    toModal
+    toModalComponent
 } from './modal.js'
 
 import {
@@ -213,7 +213,7 @@ export class ExpiryCalendar {
         const product = this.currentModalProducts.find(prod => prod.id === id)
         
         if (!product) return
-        const html = toModal(product, id)
+        const html = toModalComponent(product, id)
         modal.innerHTML = html
         modal.firstElementChild.style.paddingLeft = 28 + 'px'
         modal.firstElementChild.style.marginBottom = 12 + 'px'
@@ -339,6 +339,7 @@ document.getElementById('backdrop-calendar').addEventListener('click', () => {
     document.body.classList.remove('no-scroll');
 })
  
+
 
 
 
