@@ -186,7 +186,7 @@ export class ExpiryCalendar {
         <div class="modal-calendar__content">
         <h3 class="modal__title">Товары до ${date.toLocaleDateString()}</h3>
         ${products.length > 0
-                ? `<ul id="calendar-list">${products.map(p => `${this.createProductCard(p, date)}`).join('')}</ul>`
+                ? `<ul id="calendar-list">${products.map(p => `${this.createProductCardComponent(p, date)}`).join('')}</ul>`
                 : '<p>Нет товаров с истекающим сроком</p>'
             }
         <button class="btn modal-calendar__close" style="width: 100%;">Закрыть</button>
@@ -250,7 +250,7 @@ export class ExpiryCalendar {
 
                 if (calendarList) {
                     if (currentProducts.length > 0) {
-                        calendarList.innerHTML = currentProducts.map(p => this.createProductCard(p, this.currentSelectedDate)).join('')
+                        calendarList.innerHTML = currentProducts.map(p => this.createProductCardComponent(p, this.currentSelectedDate)).join('')
                     } else {
                         calendarList.innerHTML = '<p>Нет товаров с истекающим сроком годности </p>'
                     }
@@ -297,7 +297,7 @@ export class ExpiryCalendar {
         return arrowBack
     }
 
-    createProductCard(product, date) {
+    createProductCardComponent(product, date) {
         const categoryDisplay = productCategoryTranslation[product.category] || product.category
 
         return `
@@ -339,6 +339,7 @@ document.getElementById('backdrop-calendar').addEventListener('click', () => {
     document.body.classList.remove('no-scroll');
 })
  
+
 
 
 
