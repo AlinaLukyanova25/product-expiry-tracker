@@ -1,5 +1,5 @@
 import {
-    nextDayString
+    DateUtils
 } from './state.js'
 
 import {
@@ -34,7 +34,7 @@ export function toModal(card, id) {
     </div>
     <button class="btn modal__button--calc">Автоматический расчет</button>
     <label class="modal__label" for="modal-date">Дата окончания срока</label>
-    <input class="input-field modal__end-date" id="modal-date" type="date" name="date" data-id="${id}" min="${nextDayString}" value="${card.expiryDate}" style="width: 100%;" required>
+    <input class="input-field modal__end-date" id="modal-date" type="date" name="date" data-id="${id}" min="${DateUtils.getTomorrowDateString()}" value="${card.expiryDate}" style="width: 100%;" required>
     <button class="btn modal__button" type="submit">Сохранить изменения</button>
     <button class="btn modal__push-archive">Добавить в архив</button>
     `
@@ -103,11 +103,12 @@ function createModalReturn(product, id) {
     </div>
     <button class="btn modal-return__button--calc">Автоматический расчет</button>
     <label class="modal-return__label" for="modal-return-date">Дата окончания срока</label>
-    <input class="input-field modal-return__end-date" id="modal-return-date" type="date" name="date" data-modal="${id}" min="${nextDayString}" style="width: 100%;" required>
+    <input class="input-field modal-return__end-date" id="modal-return-date" type="date" name="date" data-modal="${id}" min="${DateUtils.getTomorrowDateString()}" style="width: 100%;" required>
     <button class="btn modal-return__button" type="submit">Вернуть из архива</button>
     `
 
 }
+
 
 
 
