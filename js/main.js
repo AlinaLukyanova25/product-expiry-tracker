@@ -31,10 +31,10 @@ import {
 } from './products.js'
 
 import {
-  toModal,
-  createModalRemove,
+  toModalComponent,
+  createModalRemoveComponent,
   openModalReturn,
-  createModalRemoveAll
+  createModalRemoveAllComponent
 } from './modal.js'
 
 import {
@@ -323,7 +323,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     document.body.classList.add('no-scroll')
 
     if (e.target.closest('.section__btn-remove')) {
-      const htmlModalRemove = createModalRemove(product, card.dataset.productId)
+      const htmlModalRemove = createModalRemoveComponent(product, card.dataset.productId)
       modalRemove.innerHTML = htmlModalRemove
       modalRemove.classList.add('open-remove')
       document.body.classList.add('no-scroll');
@@ -339,7 +339,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     const arrow = createArrow()
     if (!arrow) elementCheck(arrow, 'стрелка')
   
-    const html = toModal(product, id)
+    const html = toModalComponent(product, id)
     modal.innerHTML = html
     modal.classList.add('open')
     modal.prepend(arrow)
@@ -1260,7 +1260,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     allSection.forEach(element => {
       if (element.style.display !== 'none') {
-        const html = createModalRemoveAll(element.querySelector('h2').innerHTML)
+        const html = createModalRemoveAllComponent(element.querySelector('h2').innerHTML)
         modalRemove.innerHTML = html
         modalRemove.classList.add('open-remove')
         document.body.classList.add('no-scroll');
@@ -1320,6 +1320,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   }
 
 })
+
 
 
 
