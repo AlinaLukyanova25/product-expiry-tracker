@@ -3,8 +3,7 @@ import {
 } from './state.js'
 
 import {
-    createArrow,
-    dateStartString
+    createArrow
 } from './calculator.js'
 
 
@@ -22,7 +21,7 @@ export function toModalComponent(card, id) {
         accept="image/*"
         style="display: none;">
     <label class="modal__label" for="modal-date-production">Дата изготовления</label>
-    <input class="input-field modal__date-production" id="modal-date-production" type="date" name="dateProd" data-id="${id}" max="${dateStartString}" value="${card.productionDate}" style="width: 100%;" required>
+    <input class="input-field modal__date-production" id="modal-date-production" type="date" name="dateProd" data-id="${id}" max="${DateUtils.getTodayDateString()}" value="${card.productionDate}" style="width: 100%;" required>
     <div class="modal__auto-calc">
     <label class="modal__label" for="auto">Автоматический расчет по</label>
     <select class="input-field modal__select" id="auto" style="width: 100%;">
@@ -91,7 +90,7 @@ function createModalReturnComponent(product, id) {
         accept="image/*"
         style="display: none;">
     <label class="modal-return__label" for="modal-return-date-prod">Дата изготовления</label>
-    <input class="input-field modal-return__prod-date" id="modal-return-date-prod" type="date" name="dateProd" data-modal="${id}" max="${dateStartString}" style="width: 100%;" required>
+    <input class="input-field modal-return__prod-date" id="modal-return-date-prod" type="date" name="dateProd" data-modal="${id}" max="${DateUtils.getTodayDateString()}" style="width: 100%;" required>
     <div class="modal-return__auto-calc">
     <label class="modal-return__label" for="return-auto">Автоматический расчет по</label>
     <select class="input-field modal-return__select" id="return-auto" style="width: 100%;">
@@ -108,6 +107,7 @@ function createModalReturnComponent(product, id) {
     `
 
 }
+
 
 
 
