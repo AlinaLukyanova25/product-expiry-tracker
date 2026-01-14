@@ -741,7 +741,7 @@ label {
     margin-top: auto;
   }
   .form__btn-remove {
-    padding: space-8;
+    padding: 8px;
   }
   .nav-list {
     flex-wrap: nowrap;
