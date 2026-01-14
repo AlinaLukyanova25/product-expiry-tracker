@@ -238,10 +238,6 @@ label {
   gap: 24px;
 }
 
-.shadow {
-  box-shadow: 0 0 8px rgba(255, 0, 0, 0.5);
-}
-
 .form-search {
   display: none;
   margin: 24px auto;
@@ -357,6 +353,10 @@ label {
   border-radius: 3px;
   padding: 2px;
   transition: all 0.3s ease;
+}
+
+.shadow {
+  box-shadow: 0 0 8px rgba(255, 0, 0, 0.5)
 }
 
 .modalDefault {
@@ -896,3 +896,4 @@ label {
 }
 
 /*# sourceMappingURL=style.css.map */
+
