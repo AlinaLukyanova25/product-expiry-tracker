@@ -60,7 +60,7 @@ export function createProductCardComponent(card) {
             <div class="progress__bar section__item-progress-bar" style="width: ${percent}"></div>
           </div>
         </div>
-        <div class="section__item-bottom">
+        <div class="section__item-footer">
           <div>До ${expiryDate}</div>
           <div>${categoryDisplay}</div>
         </div>
@@ -92,7 +92,7 @@ export function creaeteArchiveCardComponent(product) {
         <h3 class="card__title">${product.name}</h3>
           <p>Продукт в архиве</p>
         </div>
-        <div class="section__item-bottom"  style="justify-content: right;">
+        <div class="section__item-footer"  style="justify-content: right;">
           <div class="section__category--today" style="margin: 0;">${categoryDisplay}</div>
         </div>
     `
@@ -114,6 +114,7 @@ function setWidthProgrssBar(product) {
     return Math.round(subtractionPercent) + '%'
 
 }
+
 
 
 
