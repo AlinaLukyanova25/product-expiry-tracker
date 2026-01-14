@@ -330,7 +330,7 @@ document.addEventListener('DOMContentLoaded', async function () {
       return
     }
 
-    if (e.target.closest('.section__archive')) {
+    if (e.target.closest('.section--archive')) {
       openModalReturn(product, card.dataset.productId, modalReturn)
       document.body.classList.add('no-scroll');
       return
@@ -384,7 +384,7 @@ document.addEventListener('DOMContentLoaded', async function () {
       return
     }
 
-    if (e.target.closest('.section__archive')) {
+    if (e.target.closest('.section--archive')) {
       card = e.target.closest('.section__item')
       if (e.key === 'Enter' || e.keyCode === 13) {
       card.click()
@@ -1131,35 +1131,35 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     for (const section of allSection) {
       if (section.style.display === 'block') {
-        if (section.classList.contains('section__archive')) {
+        if (section.classList.contains('section--archive')) {
           needProducts = products.filter(prod => prod.inArchive)
           await filterNeedProducts(needProducts, section, needProduct)
           needProducts = []
           break
         }
 
-        if (section.classList.contains('section__expired')) {
+        if (section.classList.contains('section--expired')) {
           needProducts = products.filter(prod => calculateDateDifference(prod.expiryDate) <= 0 && !prod.inArchive)
           await filterNeedProducts(needProducts, section, needProduct)
           needProducts = []
           break
         }
 
-        if (section.classList.contains('section__soon')) {
+        if (section.classList.contains('section--soon')) {
           needProducts = products.filter(prod => calculateDateDifference(prod.expiryDate) <= 3 && calculateDateDifference(prod.expiryDate) > 0 && !prod.inArchive)
           await filterNeedProducts(needProducts, section, needProduct)
           needProducts = []
           break
         }
 
-        if (section.classList.contains('section__fresh')) {
+        if (section.classList.contains('section--fresh')) {
           needProducts = products.filter(prod => calculateDateDifference(prod.expiryDate) > 3 && !prod.inArchive)
           await filterNeedProducts(needProducts, section, needProduct)
           needProducts = []
           break
         }
 
-        if (section.classList.contains('section__all')) {
+        if (section.classList.contains('section--all')) {
           needProducts = products.filter(prod => !prod.inArchive)
           await filterNeedProducts(needProducts, section, needProduct)
           needProducts = []
@@ -1320,6 +1320,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   }
 
 })
+
 
 
 
