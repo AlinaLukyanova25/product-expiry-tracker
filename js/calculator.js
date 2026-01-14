@@ -112,7 +112,7 @@ export function createModalCalculatorComponent() {
     
     <h2 class="modal__title">Калькулятор</h2>
     <label for="modal-date-start">Дата изготовления</label>
-    <input class="input-field calculator__date-start" id="modal-date-start" type="date" max="${dateStartString}" style="width: 100%;">
+    <input class="input-field calculator__date-start" id="modal-date-start" type="date" max="${DateUtils.getTodayDateString()}" style="width: 100%;">
     <label for="modal-days">Срок годности, дней</label>
     <input class="input-field calculator__days" id="modal-days" type="number" min="1" style="width: 100%;">
     <label for="modal-months">Срок годности, месяцев</label> 
@@ -131,5 +131,6 @@ export function createArrow() {
     return arrowBack
 
 }
+
 
 
