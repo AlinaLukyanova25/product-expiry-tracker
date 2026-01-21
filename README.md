@@ -23,7 +23,7 @@
 
 ## Запуск проекта
 
-Просто перейдите по ссылке: [**Открыть Трекер сроков годности**](https://alinalukyanova25.github.io/firstproject/)
+Просто перейдите по ссылке: [**Открыть Трекер сроков годности**](https://alinalukyanova25.github.io/product-expiry-tracker/)
 
 ## Архитектура и ключевые решения
 
