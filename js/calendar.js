@@ -4,8 +4,10 @@ import {
 
 import {
  productCategoryTranslation,
- formatDateCard
+//  formatDateCard
 } from './products.js'
+
+import {formatDateCard} from './utils/date-utils.js'
 
 import {
     toModalComponent

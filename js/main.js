@@ -27,9 +27,10 @@ import {
   clearError,
 } from './calculator.js'
 
+import { calculateDateDifference } from './utils/date-utils.js'
+
 import {
   createProductCardComponent,
-  calculateDateDifference,
   creaeteArchiveCardComponent,
 } from './products.js'
 

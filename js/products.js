@@ -1,3 +1,5 @@
+import {calculateDateDifference, formatDateCard} from './utils/date-utils.js'
+
 export const productCategoryTranslation = {
   'milk': 'Молочка',
   'cheese': 'Сыры',
@@ -30,8 +32,6 @@ function getDaysText(daysLeft) {
     const word = numeralize.pluralize(daysLeft,  'день', 'дня', 'дней')
     return `До конца: ${daysLeft} ${word}`
 }
-
-
   
 export function createProductCardComponent(card) {
     const categoryDisplay = productCategoryTranslation[card.category] || card.category
@@ -66,21 +66,6 @@ export function createProductCardComponent(card) {
         </div>
         <div>
     `
-}
-
-export function calculateDateDifference(date) {
-  if (!date) return null
-    let now = new Date()
-    let difference = new Date(date) - now
-    return Math.ceil(difference / 86400000)
-}
-
-export function formatDateCard(date) {
-  if (!date) return null
-    date = new Date(date)
-    const day = String(date.getDate()).padStart(2, '0')
-    const month = String(date.getMonth() + 1).padStart(2, '0')
-    return `${day}.${month}.${date.getFullYear()}`
 }
 
 export function creaeteArchiveCardComponent(product) {
