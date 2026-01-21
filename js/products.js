@@ -83,6 +83,70 @@ export function creaeteArchiveCardComponent(product) {
     `
 }
 
+export async function renderInitialProducts(productsDB, filterSelect, sections) {
+    const products = await productsDB.getAllProducts()
+    let arr = []
+    for (let prod of products) {
+      arr.push(prod)
+    }
+    if (filterSelect.value === 'date') {
+      arr = arr.sort((a, b) => new Date(a.expiryDate) - new Date(b.expiryDate))
+    }
+
+    if (filterSelect.value === 'name') {
+      arr = arr.sort((a, b) => a.name.localeCompare(b.name))
+    }
+    for (let prod of arr) {
+      if (prod.inArchive) {
+        renderProductsToArchive(sections.archive, prod)
+      } else {
+      renderProductsToSection(sections.all, prod)
+      const daysLeft = calculateDateDifference(prod.expiryDate)
+      if (daysLeft <= 3 && daysLeft > 0) {
+      renderProductsToSection(sections.soon, prod)
+        } else if (daysLeft <= 0) {
+      renderProductsToSection(sections.expired, prod)
+        } else {
+      renderProductsToSection(sections.fresh, prod)
+        }
+      }
+    }
+}
+  
+function renderProductsToSection(section, prod) {
+    const ul = section.querySelector('ul')
+    if (ul.querySelector('p')?.textContent === 'Пока ничего нет...') {
+      ul.innerHTML = ''
+    }
+
+    let li = document.createElement('li')
+    li.classList.add('card', 'section__item')
+    li.setAttribute('data-product-id', prod.id)
+    li.setAttribute('tabindex', '0')
+    li.innerHTML = createProductCardComponent(prod)
+    ul.append(li)
+
+    if (section.id === 'all-products' && new Date(prod.expiryDate) < new Date) {
+      li.classList.add('shadow')
+    }
+}
+  
+function renderProductsToArchive(section, product) {
+    const ul = section.querySelector('ul')
+    if (!ul) return
+
+    if (ul.querySelector('p')?.textContent === 'Пока ничего нет...') {
+      ul.innerHTML = ''
+    }
+
+    const li = document.createElement('li')
+    li.classList.add('card', 'section__item')
+    li.setAttribute('data-product-id', product.id)
+    li.setAttribute('tabindex', '0')
+    li.innerHTML = creaeteArchiveCardComponent(product)
+    ul.append(li)
+  }
+
 function setWidthProgrssBar(product) {
     const allTime = new Date(product.expiryDate) - new Date(product.productionDate)
     if (!allTime) return 0 + '%'

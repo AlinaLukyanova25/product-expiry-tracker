@@ -6,10 +6,6 @@ import {
 
 import {initMenu} from './modules/menu.js'
 
-import {
-  DateUtils
-} from './state.js'
-
 import {initForms} from './modules/product-form.js'
 
 import {
@@ -32,6 +28,7 @@ import { calculateDateDifference } from './utils/date-utils.js'
 import {
   createProductCardComponent,
   creaeteArchiveCardComponent,
+  renderInitialProducts
 } from './products.js'
 
 import {
@@ -95,36 +92,16 @@ document.addEventListener('DOMContentLoaded', async function () {
   const dateInput = document.getElementById('end-date');
 
   initForms(productsDB, renderAllProducts, calendarR)
- 
-  async function autoRenderProduct() {
-    const products = await productsDB.getAllProducts()
-    let arr = []
-    for (let prod of products) {
-      arr.push(prod)
-    }
-    if (filterSelect.value === 'date') {
-      arr = arr.sort((a, b) => new Date(a.expiryDate) - new Date(b.expiryDate))
-    }
 
-    if (filterSelect.value === 'name') {
-      arr = arr.sort((a, b) => a.name.localeCompare(b.name))
-    }
-    for (let prod of arr) {
-      if (prod.inArchive) {
-        renderProductsToArchive(sectionArchive, prod)
-      } else {
-      autoMakeCategory(sectionProductsAll, prod)
-      const daysLeft = calculateDateDifference(prod.expiryDate)
-      if (daysLeft <= 3 && daysLeft > 0) {
-      autoMakeCategory(sectionProductsSoon, prod)
-        } else if (daysLeft <= 0) {
-      autoMakeCategory(sectionProductsExpired, prod)
-        } else {
-      autoMakeCategory(sectionProductsFresh, prod)
-        }
-      }
-    }
+  const sections = {
+    archive: document.getElementById('archive'),
+    all: document.getElementById('all-products'),
+    soon: document.getElementById('soon-products'),
+    expired: document.getElementById('expired-products'),
+    fresh: document.getElementById('fresh-products'),
   }
+
+  renderInitialProducts(productsDB, filterSelect, sections)
 
   function autoMakeCategory(section, prod) {
     const ul = section.querySelector('ul')
@@ -144,7 +121,6 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
   }
 
-  autoRenderProduct()
   calendarR()
 
   //modal
