@@ -4,6 +4,8 @@ import {
   productsDB
 } from './storage.js'
 
+import {initMenu} from './modules/menu.js'
+
 import {
   DateUtils
 } from './state.js'
@@ -70,51 +72,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
   const menu = document.querySelector('.nav')
 
-  if (menu) {
-    menu.addEventListener('click', openSection)
-  } else {
-    console.error('Меню не найдено')
-    return
-  }
-
-  function openSection(e) {
-    if (!e.target.closest('li')) return
-    e.preventDefault()
-    
-    searchForm.style.display = 'none'
-    if (searchInput) searchInput.value = ''
-    if (formSearchClear) formSearchClear.style.display = 'none'
-
-    const menuLi = menu.querySelectorAll('li')
-    menuLi.forEach(element => {
-      element.classList.remove('active')
-    });
-
-    const target = e.target.closest('li')
-
-    const aHref = target.querySelector('a').href
-    let id;
-    const sections = document.querySelectorAll('section')
-    sections.forEach(element => {
-      element.style.display = 'none'
-      let searchId = aHref.indexOf(element.id)
-      if (searchId > -1) {
-        target.classList.add('active')
-        if (element.classList.contains('form') && window.innerWidth < 814) {
-          element.style.display = 'flex'
-        } else {
-          element.style.display = 'block'
-        }
-        if (element.id === 'all-products' || element.id === 'fresh-products' 
-          || element.id === 'soon-products'
-          || element.id === 'expired-products'
-          || element.id === 'archive'
-        ) {
-        searchForm.style.display = 'flex'
-      }
-      }
-    });
-  }
+  initMenu()
 
   //filter
 
