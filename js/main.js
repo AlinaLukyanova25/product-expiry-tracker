@@ -10,6 +10,8 @@ import {
   DateUtils
 } from './state.js'
 
+import {initForms} from './modules/product-form.js'
+
 import {
   sectionHero,
   calcDateStart,
@@ -88,103 +90,10 @@ document.addEventListener('DOMContentLoaded', async function () {
   //products
   
   const addFormProducts = document.getElementById('add-form');
-  const nameProduct = document.getElementById('name-product');
-  const categoryProduct = document.getElementById('category');
   const dateManufactureProduct = document.getElementById('date-manufacture')
   const dateInput = document.getElementById('end-date');
 
-  DateUtils.setMinDate(dateInput)
-  DateUtils.setMaxDate(dateManufactureProduct)
-
-  if (!addFormProducts) {
-    console.error('Форма добавления не найдена')
-    return
-  }
-
-  addFormProducts.addEventListener('click', downloadImageForm)
-    
-  
-  async function downloadImageForm(e) {
-
-    if (e.target.closest('.image-preview')) {
-
-      try {
-    const input = document.createElement('input')
-    input.type = 'file'
-    input.accept = 'image/*'
-
-        input.onchange = async function (event) {
-        const file = event.target.files[0];
-        if (!file) return
-
-        if (!file.type.startsWith('image/')) {
-            alert('Выберите файл для изображения!')
-            return
-          }
-          
-          if (file.size > 5 * 1024 * 1024) {
-            alert('Изображение слишком большое. Максимум 5МВ')
-            return
-          }
-
-        const reader = new FileReader()
-
-      reader.onload = async function (e) {
-        try {
-          const compressedImage = await compressImage(e.target.result)
-        
-          addFormProducts.querySelector('.image-preview').innerHTML = `<img src="${compressedImage}" alt="Фото продукта">`
-        
-        } catch (error) {
-          console.error('Ошибка при обработке фото:', error)
-        }
-        
-          }
-          
-          reader.onerror = (error) => {
-            console.error('Ошибка при чтении файла:', error)
-          }
-
-          reader.readAsDataURL(file)
-          
-          setTimeout(() => input.remove(), 100)
-    }
-
-        input.click()
-        
-    } catch(error) {
-        console.error('Ошибка при загрузке фото:', error)
-      }
-      
-      return 
-    }
-  }
-  
-  addFormProducts.addEventListener('submit', async function (e) {
-    e.preventDefault();
-    const days = (new Date(dateInput.value) - new Date(dateManufactureProduct.value)) / 86400000
-    const imageUrl = (addFormProducts.querySelector('.image-preview img')) ? addFormProducts.querySelector('.image-preview img').src : null
-    let product = {
-      id: Date.now(),
-      name: nameProduct.value,
-      productionDate: dateManufactureProduct.value || null,
-      expiryDate: dateInput.value || null,
-      shelfLife: (new Date(dateInput.value) - new Date(dateManufactureProduct.value)) / 86400000 || null,
-      category: categoryProduct.value,
-      inArchive: false,
-      image: imageUrl,
-      addedDate: new Date().toISOString().split('T')[0]
-    }
-
-    await productsDB.addProduct(product)
-    console.log(await productsDB.getAllProducts())
-
-    addFormProducts.querySelector('.image-preview').innerHTML = ''
-    renderAllProducts()
-    calendarR()
-
-    addFormProducts.reset()
-  })
+  initForms(productsDB, renderAllProducts, calendarR)
  
   async function autoRenderProduct() {
     const products = await productsDB.getAllProducts()
@@ -1262,42 +1171,4 @@ document.addEventListener('DOMContentLoaded', async function () {
     dateManufactureProduct.value = calcDateStart.value
     dateInput.value = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
   }
-
 })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
