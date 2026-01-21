@@ -1,18 +1,18 @@
 export function createImageUploadHandler(previewElement) {
-    return async function downloadImage(e) {
+  return async function downloadImage(e) {
 
     if (e.target.closest('.image-preview')) {
 
       try {
-    const input = document.createElement('input')
-    input.type = 'file'
-    input.accept = 'image/*'
+        const input = document.createElement('input')
+        input.type = 'file'
+        input.accept = 'image/*'
 
         input.onchange = async function (event) {
-        const file = event.target.files[0];
-        if (!file) return
+          const file = event.target.files[0];
+          if (!file) return
 
-        if (!file.type.startsWith('image/')) {
+          if (!file.type.startsWith('image/')) {
             alert('Выберите файл для изображения!')
             return
           }
@@ -22,17 +22,17 @@ export function createImageUploadHandler(previewElement) {
             return
           }
 
-        const reader = new FileReader()
+          const reader = new FileReader()
 
-      reader.onload = async function (e) {
-        try {
-          const compressedImage = await compressImage(e.target.result)
+          reader.onload = async function (e) {
+            try {
+              const compressedImage = await compressImage(e.target.result)
         
-          previewElement.innerHTML = `<img src="${compressedImage}" alt="Фото продукта">`
+              previewElement.innerHTML = `<img src="${compressedImage}" alt="Фото продукта">`
         
-        } catch (error) {
-          console.error('Ошибка при обработке фото:', error)
-        }
+            } catch (error) {
+              console.error('Ошибка при обработке фото:', error)
+            }
         
           }
           
@@ -43,17 +43,18 @@ export function createImageUploadHandler(previewElement) {
           reader.readAsDataURL(file)
           
           setTimeout(() => input.remove(), 100)
-    }
+        }
 
         input.click()
         
-    } catch(error) {
+      } catch (error) {
         console.error('Ошибка при загрузке фото:', error)
       }
     }
-    }
-    
-    async function compressImage(dataUrl, maxWidth = 800) {
+  };
+}
+
+export async function compressImage(dataUrl, maxWidth = 800) {
     return new Promise((resolve, reject) => {
       const img = new Image()
       img.src = dataUrl
@@ -79,4 +80,3 @@ export function createImageUploadHandler(previewElement) {
       }
     })
   }
-}

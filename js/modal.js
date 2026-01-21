@@ -6,6 +6,196 @@ import {
     createArrow
 } from './calculator.js'
 
+import { compressImage } from './utils/image-uploader.js'
+
+export class ModalManager {
+    constructor(productsDB, renderAllProducts) {
+        this.productsDB = productsDB;
+        this.renderAllProducts = renderAllProducts;
+
+        this.modal = document.getElementById('modal');
+        this.backdrop = document.getElementById('backdrop');
+        this.modalRemove = document.getElementById('modal-remove');
+        this.backdropRemove = document.getElementById('remove-backdrop');
+        this.modalReturn = document.getElementById('modal-return');
+        this.backdropReturn = document.getElementById('return-backdrop');
+
+        this.currentProductId = null;
+        this.currentCard = null;
+        this.scrollPosition = 0;
+
+        this.init()
+    }
+
+    init() {
+        this.validateElements();
+        this.bindEvents();
+        console.log('ModalManager инициализирован')
+    }
+
+    validateElements() {
+        const elements = [
+            { el: this.modal, name: 'modal' },
+            { el: this.backdrop, name: 'backdrop' },
+            { el: this.modalRemove, name: 'modalRemove' },
+            { el: this.backdropRemove, name: 'backdropRemove' },
+            { el: this.modalReturn, name: 'modalReturn' },
+            { el: this.backdropReturn, name: 'backdropReturn' },
+        ];
+
+        elements.forEach(({el, name}) => {
+            if(!el) {
+                console.error(`${name} не найдено`)
+            }
+        });
+    }
+
+    bindEvents() {
+        document.addEventListener('click', (e) => this.handleDocumnetClick(e))
+
+        this.backdrop.addEventListener('click', () => this.closeModal())
+        this.backdropRemove.addEventListener('click', () => this.closeModalRemove())
+        this.backdropReturn.addEventListener('click', () => this.closeModalReturn())
+
+        this.modalRemove.addEventListener('click', (e) => this.handleRemoveModalClick(e))
+
+        this.modal.addEventListener('click', (e) => this.handleModalClick)
+
+        this.modal.addEventListener('submit', (e) => this.handleModalSubmit)
+    }
+
+    async handleDocumnetClick(e) {
+        const card = e.target.closest('.section__item')
+        if (!card) return
+
+        const id = +card.dataset.productId
+        const product = await productsDB.getProductById(id)
+        
+        if (!product) {
+            console.error('Product не найден')
+            return
+        }
+
+        this.scrollPosition = e.pageY - e.clientY
+        document.body.classList.add('no-scroll')
+
+        if (e.target.closest('.section__btn-remove')) { 
+            this.openRemoveModal(product, id)
+        } else if (e.target.closest('.section--archive')) {
+            this.openReturnModal(product, id)
+        } else {
+            this.openEditModal(product, id, card)
+        }
+    }
+
+    openEditModal(product, id, card) {
+        const arrow = createArrow()
+        const html = this.toModalComponent(product, id)
+
+        this.modal.innerHTML = html
+        this.modal.classList.add('open')
+        this.modal.prepend(arrow)
+
+        this.currentCard = card;
+        this.currentProductId = id;
+
+        arrow.addEventListener('click', (e) => {
+            e.preventDefault()
+            this.closeModal(card)
+        })
+    }
+
+    openRemoveModal(product, id) {
+        const html = createModalRemoveComponent(product, id)
+        this.modalRemove.innerHTML = html
+        this.modalRemove.classList.add('open-remove')
+        this.currentProductId = id
+    }
+
+    openModalReturn(product, id) {
+        const arrow = createArrow()
+
+        this.modalReturn.innerHTML = createModalReturnComponent(product, id)
+        this.modalReturn.classList.add('open-return')
+        modalReturn.prepend(arrow)
+
+        this.currentProductId = id
+        this.currentCard = document.querySelector(`[data-product-id="${id}"]`)
+
+        arrow.addEventListener('click', (e) => {
+            e.preventDefault()
+            this.closeModalReturn()
+        // modalReturn.classList.remove('open-return')
+        // document.body.classList.remove('no-scroll');
+        // window.scrollTo(0, window.scrollPosition)
+        // document.querySelector(`[data-product-id="${id}"]`).focus()
+        })
+    }
+
+    closeModal() {
+        this.modal.classList.remove('open')
+        document.body.classList.remove('no-scroll')
+        window.scrollTo(0, this.scrollPosition)
+
+        if (this.currentCard) this.currentCard.focus()
+    }
+    
+    closeModalRemove() {
+        this.modalRemove.classList.remove('open-remove')
+        document.body.classList.remove('no-scroll');
+        window.scrollTo(0, this.scrollPosition)
+    }
+
+    closeModalReturn() {
+        this.modalReturn.classList.remove('open-return')
+        document.body.classList.remove('no-scroll');
+        window.scrollTo(0, this.scrollPosition)
+
+        if (this.currentCard) {
+            this.currentCard.focus()
+        }
+    }
+
+    async handleRemoveModalClick(e) {
+        const cancel = e.target.closest('.cancel')
+            // if (cancel) {
+            //   const id = document.querySelector('#ok-one').dataset.rem
+            //   document.querySelector(`[data-product-id="${id}"]`).focus()
+            //   closeModalRemove()
+            //   return
+            // }
+        
+        if (e.target.classList.contains('cancel')) {
+            this.closeModalRemove()
+            return
+        }
+
+        if (e.target.classList.contains('ok')) {
+            const id = e.target.dataset.rem
+
+            if (id) {
+                await this.productsDB.deleteProduct(+id)
+                await this.renderAllProducts()
+                this.closeModalRemove()
+            }
+        }
+            // const ok = e.target.closest('#ok-one')
+            // const products = await productsDB.getAllProducts()
+        
+            // if (ok) {
+            //   const id = +ok.dataset.rem
+            //   const product = products.find(prod => prod.id === id)
+            //   console.log(product)
+        
+            //   if (product) {
+            //     removeProduct(product.id)
+            //   }
+            //   return
+            // }
+            // return
+    }
+}
+
 
 export function toModalComponent(card, id) {
     return `
