@@ -132,5 +132,53 @@ export function createArrow() {
 
 }
 
+class DateCalculator {
+  constructor() {
+    this.init()
+  }
+
+  init() {
+    this.setupEventListeners()
+  }
+
+  setupEventListeners() {
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('.modal__calculator')) {
+        const modal = e.target.closest('.modal, .modal-return, .form__add')
+        this.openCalculator(e, modal)
+      }
+    })
+
+    document.getElementById('backdrop-calculator')?.addEventListener('click', this.closeCalculator)
+  }
+
+  openCalculator(e, modalElement) {
+    e.preventDefault()
+
+    const context = modalElement.classList.contains('modal-return') ? 'return' :
+                    modalElement.classList.contains('modal') ? 'modal' : 'form' 
+    
+    this.setupCalculatorModal(modalElement, context)
+  }
+
+  setupCalculatorModal(sourceModal, context) {
+    const calculatorModal = this.createCalculatorModal()
+    this.populateCalculator(calculatorModal, sourceModal, context)
+    this.addCalculatorListeners(calculatorModal, sourceModal, context)
+  }
+
+  createCalculatorModal() {
+    const formCalculator = document.querySelector('.modal-form-calculator')
+    // newFormCalculator.classList.add()
+    // document.body.classList.add('no-scroll');
+    newFormCalculator.innerHTML = html
+    const newFormCalculator = formCalculator.cloneNode(true)
+    formCalculator.parentNode.replaceChild(newFormCalculator, formCalculator)
+  
+    const html = createModalCalculatorComponent()
+    return formCalculator
+  }
+}
+
 
 
