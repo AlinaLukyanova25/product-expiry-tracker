@@ -67,7 +67,7 @@ export class ModalManager {
 
         this.modalReturn.addEventListener('click', (e) => this.handleReturnModalClick(e))
 
-        this.modalReturn.addEventListener('submit', (e) => handleReturnModalSubmit(e))
+        this.modalReturn.addEventListener('submit', (e) => this.handleReturnModalSubmit(e))
     }
 
     async handleDocumnetClick(e) {
@@ -338,7 +338,7 @@ export class ModalManager {
         product.shelfLife = (new Date(modalDateInput.value) - new Date(dateProdInput.value)) / 86400000
         product.inArchive = false
         
-        const modalImage = modalReturn.querySelector('.image-preview img')
+        const modalImage = this.modalReturn.querySelector('.image-preview img')
         if (modalImage && modalImage.src !== product.image) {
             product.image = this.modalReturn.querySelector('.image-preview img').src
         }

@@ -14,11 +14,8 @@ import {
   calcDays,
   calcMonths,
   btnAddToForm,
-  validateCalculator,
-  calculateExpirationDate,
   dateToAddForm,
-  createModalCalculatorComponent,
-  createArrow,
+  DateCalculator
 } from './calculator.js'
 
 import { calculateDateDifference } from './utils/date-utils.js'
@@ -79,7 +76,6 @@ document.addEventListener('DOMContentLoaded', async function () {
 
   //products
   
-  const addFormProducts = document.getElementById('add-form');
   const dateManufactureProduct = document.getElementById('date-manufacture')
   const dateInput = document.getElementById('end-date');
 
@@ -300,173 +296,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
   }
 
-  //archive
-
-  modal.addEventListener('click', openCalculator)
-  modalReturn.addEventListener('click', openCalculator)
-  addFormProducts.addEventListener('click', openCalculator)
-
-  function openCalculator(e) {
-    if (this.classList.contains('modal')) {
-      addLogicCalculate(this, 'open')
-      return
-    }
-    if (this.classList.contains('modal-return')) {
-      addLogicCalculate(this, 'open-return')
-      return
-    }
-
-    function addLogicCalculate(modal, open) {
-      const calcButton = e.target.closest('.modal__calculator')
-      if (!calcButton) return
-      e.preventDefault()
-      
-      const formCalculator = document.querySelector('.modal-form-calculator')
-      modalCheck(formCalculator)
-
-      const newFormCalculator = formCalculator.cloneNode(true)
-      formCalculator.parentNode.replaceChild(newFormCalculator, formCalculator)
-  
-      const html = createModalCalculatorComponent()
-      newFormCalculator.classList.add('open')
-      document.body.classList.add('no-scroll');
-      newFormCalculator.innerHTML = html
-      const arrowBackToModal = createArrow()
-      if (!arrowBackToModal) elementCheck(arrow, 'стрелка')
-      newFormCalculator.prepend(arrowBackToModal)
-      modal.classList.remove(open)
-
-      arrowBackToModal.addEventListener('click', (e) => {
-      e.preventDefault()
-      newFormCalculator.classList.remove('open')
-      modal.classList.add(open)
-      calcButton.focus()
-      })
-
-      const modalCalcDateStart = document.getElementById('modal-date-start')
-      elementCheck(modalCalcDateStart, 'поле ввода')
-      const modalDays = document.getElementById('modal-days')
-      elementCheck(modalDays, 'поле ввода')
-      const modalMonths = document.getElementById('modal-months')
-      elementCheck(modalMonths, 'поле ввода')
-      const modalCalcDateEnd = document.getElementById('modal-date-end')
-      elementCheck(modalCalcDateEnd, 'поле ввода')
-      
-      newFormCalculator.addEventListener('submit', modalCalculatorSubmit)
-
-      function modalCalculatorSubmit(e) {
-      e.preventDefault()
-        const add = document.getElementById('modal-add')
-        elementCheck(add, 'кнопка добавления')
-
-      if (validateCalculator(modalCalcDateStart, modalDays, modalMonths)) {
-        modalCalcDateEnd.textContent = calculateExpirationDate(modalCalcDateStart.value, modalDays.value, modalMonths.value)
-        if (add.disabled === true) add.disabled = false
-      } else {
-        validateCalculator(modalCalcDateStart, modalDays, modalMonths)
-        if (add.disabled === false) add.disabled = true
-      }
-      }
-      
-    newFormCalculator.addEventListener('click', addDateToInput)
-
-    function addDateToInput(e) {
-      
-      const addButton = e.target.closest('#modal-add')
-      if (!addButton) return
-      
-      e.preventDefault()
-        if (validateCalculator(modalCalcDateStart, modalDays, modalMonths)) {
-        modal.dateProd.value = modalCalcDateStart.value
-        let date = dateToAddForm(modalCalcDateStart.value, modalDays.value, modalMonths.value)
-        modal.date.value = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
-        newFormCalculator.classList.remove('open')
-        modal.classList.add(open)
-        calcButton.focus()
-      } else {
-        validateCalculator(modalCalcDateStart, modalDays, modalMonths)
-      }
-    }
-
-  }
-
-    if (this.classList.contains('form__add')) {
-      const calcButton = e.target.closest('.modal__calculator')
-      if (!calcButton) return
-      e.preventDefault()
-      const formCalculator = document.querySelector('.modal-form-calculator')
-      modalCheck(formCalculator)
-      const html = createModalCalculatorComponent()
-      const arrow = createArrow()
-      if (!arrow) elementCheck(arrow, 'стрелка')
-      formCalculator.innerHTML = html
-      formCalculator.prepend(arrow)
-
-      formCalculator.classList.add('open')
-      document.body.classList.add('no-scroll');
-      
-    arrow.addEventListener('click', (e) => {
-      e.preventDefault()
-      formCalculator.classList.remove('open')
-      document.body.classList.remove('no-scroll');
-      calcButton.focus()
-    })
-
-      const modalCalcDateStart = document.getElementById('modal-date-start')
-      elementCheck(modalCalcDateStart, 'поле ввода')
-      const modalDays = document.getElementById('modal-days')
-      elementCheck(modalDays, 'поле ввода')
-      const modalMonths = document.getElementById('modal-months')
-      elementCheck(modalMonths, 'поле ввода')
-      const modalCalcDateEnd = document.getElementById('modal-date-end')
-      elementCheck(modalCalcDateEnd, 'поле ввода')
-
-      if (dateManufactureProduct.value) modalCalcDateStart.value = dateManufactureProduct.value
-
-      formCalculator.addEventListener('submit', modalCalculatorSubmit)
-
-      function modalCalculatorSubmit(e) {
-      e.preventDefault()
-        const add = document.getElementById('modal-add')
-        elementCheck(add, 'кнопка добавления')
-
-      if (validateCalculator(modalCalcDateStart, modalDays, modalMonths)) {
-        modalCalcDateEnd.textContent = calculateExpirationDate(modalCalcDateStart.value, modalDays.value, modalMonths.value)
-        if (add.disabled === true) add.disabled = false
-      } else {
-        validateCalculator(modalCalcDateStart, modalDays, modalMonths)
-        if (add.disabled === false) add.disabled = true
-      }
-      }
-
-      formCalculator.addEventListener('click', addDateToInput)
-
-      function addDateToInput(e) {
-      
-      const addButton = e.target.closest('#modal-add')
-        if (!addButton) return
-      e.preventDefault()
-        if (validateCalculator(modalCalcDateStart, modalDays, modalMonths)) {
-        dateManufactureProduct.value = modalCalcDateStart.value
-        let date = dateToAddForm(modalCalcDateStart.value, modalDays.value, modalMonths.value)
-        dateInput.value = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
-        formCalculator.classList.remove('open')
-        document.body.classList.remove('no-scroll');
-        calcButton.focus()
-      } else {
-        validateCalculator(modalCalcDateStart, modalDays, modalMonths)
-      }
-      }
-      return
-    }
-  }
-
-  const backdropCalculator = document.getElementById('backdrop-calculator')
-  backdropCheck(backdropCalculator)
-  backdropCalculator.addEventListener('click', () => {
-    document.querySelector('.modal-form-calculator')?.classList.remove('open')
-    document.body.classList.remove('no-scroll');
-  })
+  const dateCalculator = new DateCalculator()
 
   const formSearchBtn = document.querySelector('.form-search__btn')
   elementCheck(formSearchBtn, 'кнопка поиска')
