@@ -66,6 +66,8 @@ export class ModalManager {
         this.modal.addEventListener('submit', (e) => this.handleModalSubmit(e))
 
         this.modalReturn.addEventListener('click', (e) => this.handleReturnModalClick(e))
+
+        this.modalReturn.addEventListener('submit', (e) => handleReturnModalSubmit(e))
     }
 
     async handleDocumnetClick(e) {
@@ -316,6 +318,36 @@ export class ModalManager {
         } else {
             console.error('Продукт не найден с id:', id)
         }
+    }
+
+    async handleReturnModalSubmit(e) {
+        e.preventDefault()
+
+        const modalDateInput = document.getElementById('modal-return-date')
+        const dateProdInput = document.getElementById('modal-return-date-prod')
+        const id = +modalDateInput.dataset.id
+        const product = await this.productsDB.getProductById(id)
+            
+        if (!product) {
+            console.warn('Продукт не найден')
+            return
+        }
+
+        product.productionDate = dateProdInput.value
+        product.expiryDate = modalDateInput.value
+        product.shelfLife = (new Date(modalDateInput.value) - new Date(dateProdInput.value)) / 86400000
+        product.inArchive = false
+        
+        const modalImage = modalReturn.querySelector('.image-preview img')
+        if (modalImage && modalImage.src !== product.image) {
+            product.image = this.modalReturn.querySelector('.image-preview img').src
+        }
+        
+        await this.productsDB.updateProduct(product)
+        
+        await this.renderAllProducts()
+        
+        this.closeModalReturn()
     }
 
     async pushToArchive(e) {

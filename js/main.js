@@ -25,7 +25,6 @@ import { calculateDateDifference } from './utils/date-utils.js'
 
 import {
   createProductCardComponent,
-  creaeteArchiveCardComponent,
   renderInitialProducts,
   renderProductsToArchive
 } from './products.js'
@@ -220,33 +219,6 @@ document.addEventListener('DOMContentLoaded', async function () {
       return
     }
   })
-
-  async function compressImage(dataUrl, maxWidth = 800) {
-    return new Promise((resolve, reject) => {
-      const img = new Image()
-      img.src = dataUrl
-
-      img.onload = () => {
-        const canvas = document.createElement('canvas')
-        let width = img.width
-        let height = img.height 
-
-        if (width > maxWidth) {
-          height = (height * maxWidth) / width
-          width = maxWidth
-        }
-
-        canvas.width = width
-        canvas.height = height
-
-        const ctx = canvas.getContext('2d')
-        ctx.drawImage(img, 0, 0, width, height)
-
-        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7)
-        resolve(compressedDataUrl)
-      }
-    })
-  }
 
   async function calendarR() {
     const arr = await productsDB.getAllProducts()
@@ -495,39 +467,6 @@ document.addEventListener('DOMContentLoaded', async function () {
     document.querySelector('.modal-form-calculator')?.classList.remove('open')
     document.body.classList.remove('no-scroll');
   })
-
-  modalReturn.addEventListener('submit', returnFromArchive)
-
-  async function returnFromArchive(e) {
-    e.preventDefault()
-
-    const modalDateInput = document.getElementById('modal-return-date')
-    const dateProdInput = document.getElementById('modal-return-date-prod')
-    const id = +modalDateInput.dataset.modal
-    const product = await productsDB.getProductById(id)
-    
-    if (!product) {
-      console.warn('Продукт не найден')
-      return
-    }
-
-    product.productionDate = dateProdInput.value
-    product.expiryDate = modalDateInput.value
-    product.shelfLife = (new Date(modalDateInput.value) - new Date(dateProdInput.value)) / 86400000
-    product.inArchive = false
-
-    if (modalReturn.querySelector('.image-preview img')) {
-        if (modalReturn.querySelector('.image-preview img').src !== product.image) {
-          product.image = modalReturn.querySelector('.image-preview img').src
-        }
-    }
-
-    await productsDB.updateProduct(product)
-
-    await renderAllProducts()
-
-    modalManager.closeModalReturn()
-  }
 
   const formSearchBtn = document.querySelector('.form-search__btn')
   elementCheck(formSearchBtn, 'кнопка поиска')
