@@ -23,7 +23,8 @@ import { calculateDateDifference } from './utils/date-utils.js'
 import {
   createProductCardComponent,
   renderInitialProducts,
-  renderProductsToArchive
+  renderProductsToArchive,
+  renderAllProducts
 } from './products.js'
 
 import {
@@ -72,14 +73,14 @@ document.addEventListener('DOMContentLoaded', async function () {
     return
   }
 
-  filterSelect.addEventListener('change', renderAllProducts)
+  filterSelect.addEventListener('change', () => renderAllProducts(productsDB, filterSelect, sections))
 
   //products
   
   const dateManufactureProduct = document.getElementById('date-manufacture')
   const dateInput = document.getElementById('end-date');
 
-  initForms(productsDB, renderAllProducts, calendarR)
+  initForms(productsDB, () => renderAllProducts(productsDB, filterSelect, sections), calendarR)
 
   const sections = {
     archive: document.getElementById('archive'),
@@ -126,7 +127,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   const backdropReturn = document.getElementById('return-backdrop')
   backdropCheck(backdropReturn)
 
-  const modalManager = new ModalManager(productsDB, renderAllProducts)
+  const modalManager = new ModalManager(productsDB, () => renderAllProducts(productsDB, filterSelect, sections))
 
   document.addEventListener('keydown', function (e) {
     let card;
@@ -227,75 +228,6 @@ document.addEventListener('DOMContentLoaded', async function () {
     calendar.renderCalendar()
   }
 
-  async function renderAllProducts() {
-    console.log('Привет из рендер', await productsDB.getAllProducts())
-    const allSection = [
-      sectionProductsAll,
-      sectionProductsFresh,
-      sectionProductsSoon,
-      sectionProductsExpired,
-      sectionArchive,
-    ]
-
-    const arr = await productsDB.getAllProducts()
-    let products = []
-    for (let a of arr) {
-      products.push(a)
-    }
-
-    allSection.forEach(section => {
-      const ul = section.querySelector('ul')
-      if (ul) ul.innerHTML = ''
-    });
-
-    if (filterSelect.value === 'date') {
-      products = products.sort((a, b) => new Date(a.expiryDate) - new Date(b.expiryDate))
-    }
-    
-    if (filterSelect.value === 'name') {
-      products = products.sort((a, b) => a.name.localeCompare(b.name))
-    }
-
-    for (let prod of products) {
-      if (prod.inArchive) {
-        renderProductsToArchive(sectionArchive, prod)
-      } else {
-      renderProductsFromArray(sectionProductsAll, prod)
-      const daysLeft = calculateDateDifference(prod.expiryDate)
-      if (daysLeft <= 3 && daysLeft > 0) {
-      renderProductsFromArray(sectionProductsSoon, prod)
-        } else if (daysLeft <= 0) {
-      renderProductsFromArray(sectionProductsExpired, prod)
-        } else {
-      renderProductsFromArray(sectionProductsFresh, prod)
-        }
-      }
-    }
-
-    allSection.forEach(section => {
-      const ul = section.querySelector('ul')
-      if (ul.innerHTML === '') ul.innerHTML = '<p>Пока ничего нет...</p>'
-    });
-
-    calendarR()
-  }
-
-  function renderProductsFromArray(section, product) {
-    const ul = section.querySelector('ul')
-    if (!ul) return
-    
-    const li = document.createElement('li')
-    li.classList.add('card', 'section__item')
-    li.setAttribute('data-product-id', product.id)
-    li.setAttribute('tabindex', '0')
-    li.innerHTML = createProductCardComponent(product)
-    ul.append(li)
-    
-    if (section.id === 'all-products' && new Date(product.expiryDate) < new Date) {
-      li.classList.add('shadow')
-    }
-  }
-
   const dateCalculator = new DateCalculator()
 
   const formSearchBtn = document.querySelector('.form-search__btn')
@@ -393,10 +325,10 @@ document.addEventListener('DOMContentLoaded', async function () {
   function inputEvent(e) {
     if (searchInput.value !== '') {
       formSearchClear.style.display = 'block'
-      renderAllProducts()
+      renderAllProducts(productsDB, filterSelect, sections)
     } else {
       formSearchClear.style.display = 'none'
-      renderAllProducts()
+      renderAllProducts(productsDB, filterSelect, sections)
     }
   }
 
@@ -413,7 +345,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     if (searchInput.value) {
       searchInput.value = ''
-      renderAllProducts()
+      renderAllProducts(productsDB, filterSelect, sections)
     }
     searchInput.blur()
     formSearchClear.style.display = 'none'
@@ -491,7 +423,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             }
           });
         closeModalRemove()
-        renderAllProducts()
+        renderAllProducts(productsDB, filterSelect, sections)
         })
       }
     });

@@ -112,7 +112,7 @@ export class ModalManager {
     }
 
     openRemoveModal(product, id) {
-        const html = createModalRemoveComponent(product, id)
+        const html = this.createModalRemoveComponent(product, id)
         this.modalRemove.innerHTML = html
         this.modalRemove.classList.add('open-remove')
         this.currentProductId = id

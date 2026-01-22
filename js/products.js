@@ -112,6 +112,12 @@ export async function renderInitialProducts(productsDB, filterSelect, sections) 
       }
     }
 }
+
+export async function renderAllProducts(productsDB, filterSelect, sections) {
+  clearSections(sections)
+
+  await renderInitialProducts(productsDB, filterSelect, sections)
+}
   
 function renderProductsToSection(section, prod) {
     const ul = section.querySelector('ul')
@@ -162,6 +168,13 @@ function setWidthProgrssBar(product) {
 
     return Math.round(subtractionPercent) + '%'
 
+}
+
+function clearSections(sections) {
+  Object.values(sections).forEach(section => {
+    const ul = section.querySelector('ul')
+    ul.innerHTML = '<p>Пока ничего нет...</p>'
+  });
 }
 
 
