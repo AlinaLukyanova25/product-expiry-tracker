@@ -19,8 +19,6 @@ import {
   dateToAddForm,
   createModalCalculatorComponent,
   createArrow,
-  showError,
-  clearError,
 } from './calculator.js'
 
 import { calculateDateDifference } from './utils/date-utils.js'
@@ -32,9 +30,7 @@ import {
 } from './products.js'
 
 import {
-  toModalComponent,
-  createModalRemoveComponent,
-  openModalReturn,
+  ModalManager,
   createModalRemoveAllComponent
 } from './modal.js'
 
@@ -67,10 +63,6 @@ document.addEventListener('DOMContentLoaded', async function () {
   elementCheck(searchInput, 'поле поиска')
   const formSearchClear = document.querySelector('.form-search__remove')
   elementCheck(formSearchClear, 'кнопка очистки')
-
-  //menu
-
-  const menu = document.querySelector('.nav')
 
   initMenu()
 
@@ -138,73 +130,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   const backdropReturn = document.getElementById('return-backdrop')
   backdropCheck(backdropReturn)
 
-  document.addEventListener('click', openModal)
-  backdrop.addEventListener('click', (e) => closeModal(''))
-  backdropRemove.addEventListener('click', closeModalRemove)
-  modalRemove.addEventListener('click', removeOrCloseModal)
-  backdropReturn.addEventListener('click', (e) => closeModalReturn(''))
-  
-  async function openModal(e) {
-    const card = e.target.closest('.section__item')
-    if (!card) return
-    window.scrollPosition = e.pageY - e.clientY
-    const id = +card.dataset.productId
-    const product = await productsDB.getProductById(id)
-
-    if (!product) {
-      console.error('Product не найден')
-      return
-    }
-
-    document.body.classList.add('no-scroll')
-
-    if (e.target.closest('.section__btn-remove')) {
-      const htmlModalRemove = createModalRemoveComponent(product, card.dataset.productId)
-      modalRemove.innerHTML = htmlModalRemove
-      modalRemove.classList.add('open-remove')
-      document.body.classList.add('no-scroll');
-      return
-    }
-
-    if (e.target.closest('.section--archive')) {
-      openModalReturn(product, card.dataset.productId, modalReturn)
-      document.body.classList.add('no-scroll');
-      return
-    }
-    
-    const arrow = createArrow()
-    if (!arrow) elementCheck(arrow, 'стрелка')
-  
-    const html = toModalComponent(product, id)
-    modal.innerHTML = html
-    modal.classList.add('open')
-    modal.prepend(arrow)
-
-    arrow.addEventListener('click', (e) => {
-      e.preventDefault()
-      closeModal(card)
-    })
-  }
-
-  function closeModal(card) {
-    modal.classList.remove('open')
-    document.body.classList.remove('no-scroll')
-    window.scrollTo(0, window.scrollPosition)
-    if (card) card.focus()
-  }
-
-  function closeModalRemove() {
-    modalRemove.classList.remove('open-remove')
-    document.body.classList.remove('no-scroll');
-      window.scrollTo(0, window.scrollPosition)
-  }
-
-  function closeModalReturn(card) {
-    modalReturn.classList.remove('open-return')
-    document.body.classList.remove('no-scroll');
-    window.scrollTo(0, window.scrollPosition)
-    if (card) card.focus()
-  }
+  const modalManager = new ModalManager(productsDB, renderAllProducts)
 
   document.addEventListener('keydown', function (e) {
     let card;
@@ -294,75 +220,6 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
   })
 
-  modal.addEventListener('click', downloadImage)
-
-  async function downloadImage(e) {
-
-    if (e.target.closest('.image-preview')) {
-      const modalDateInput = document.getElementById('modal-date')
-    const id = +modalDateInput.dataset.id
-      const product = await productsDB.getProductById(id)
-      const prodIm = product.image
-      if (!product) {
-        console.warn('Продукт не найден')
-        return
-      }
-      try {
-    const input = document.createElement('input')
-    input.type = 'file'
-    input.accept = 'image/*'
-
-    input.onchange = async function (event) {
-    const file = event.target.files[0];
-    if (!file) return
-
-    if (!file.type.startsWith('image/')) {
-      alert('Выберите файл для изображения!')
-      return
-    }
-          
-      if (file.size > 5 * 1024 * 1024) {
-      alert('Изображение слишком большое. Максимум 5МВ')
-      return
-    }
-
-  const reader = new FileReader()
-
-  reader.onload = async function (e) {
-    try {
-      const compressedImage = await compressImage(e.target.result)
-        
-    if (!modal.querySelector('.image-preview img')) {
-      modal.querySelector('.image-preview').innerHTML = `<img src="${compressedImage}" alt="${product.name}">`
-    } else {
-      modal.querySelector('.image-preview img').src = compressedImage
-    }
-            
-    await productsDB.updateProduct(product)
-    } catch (error) {
-      console.error('Ошибка при обработке фото:', error)
-    }
-        
-  }
-          
-    reader.onerror = (error) => {
-      console.error('Ошибка при чтении файла:', error)
-    }
-
-    reader.readAsDataURL(file)
-          
-    setTimeout(() => input.remove(), 100)
-    }
-
-  input.click()
-        
-    } catch(error) {
-        console.error('Ошибка при загрузке фото:', error)
-      }
-      return 
-    }
-  }
-
   async function compressImage(dataUrl, maxWidth = 800) {
     return new Promise((resolve, reject) => {
       const img = new Image()
@@ -389,59 +246,6 @@ document.addEventListener('DOMContentLoaded', async function () {
       }
     })
   }
-  
-  modal.addEventListener('submit', async function (e) {
-    e.preventDefault()
-
-    const modalDateInput = document.getElementById('modal-date')
-    const id = +modalDateInput.dataset.id
-    const newDateExpiry = modalDateInput.value
-    let newDateProduction = modal.dateProd.value
-    
-    console.log('Изменяем продукт с id:', id, 'Новая дата:', newDateExpiry)
-
-    const productToUpdate = await productsDB.getProductById(id)
-    const oldDate = productToUpdate.productionDate
-
-    if (productToUpdate) {
-
-      if (oldDate === newDateProduction) {
-        let date = new Date(newDateExpiry)
-        date.setDate(date.getDate() - productToUpdate.shelfLife)
-        if (date > new Date()) {
-          showError(modal.dateProd, 'Неправильная дата изготовления')
-          return
-        } else {
-          clearError(modal.dateProd)
-        }
-        newDateProduction = date.toISOString().split('T')[0]
-      }
-      
-      productToUpdate.productionDate = newDateProduction
-      productToUpdate.expiryDate = newDateExpiry
-      productToUpdate.shelfLife = (new Date(newDateExpiry) - new Date(newDateProduction)) / 86400000
-      
-      console.log('Продукт обновлен:', productToUpdate)
-      if (modal.querySelector('.image-preview img')) {
-        if (modal.querySelector('.image-preview img').src !== productToUpdate.image) {
-          productToUpdate.image = modal.querySelector(document.querySelector('.section__item')).src
-        }
-      }
-      await productsDB.updateProduct(productToUpdate)
-      await renderAllProducts()
-      closeModal(menu)
-      window.scrollTo(0, window.scrollPosition)
-      
-    } else {
-      console.error('Продукт не найден с id:', id)
-    }
-
-    document.querySelectorAll('section').forEach(element => {
-      if (element.style.display !== 'none' && element.className !== 'calendar') {
-        document.getElementById('search').value = ''
-      }
-    });
-  })
 
   async function calendarR() {
     const arr = await productsDB.getAllProducts()
@@ -539,32 +343,6 @@ document.addEventListener('DOMContentLoaded', async function () {
     ul.append(li)
   }
 
-  async function removeOrCloseModal(e) {
-    const cancel = e.target.closest('.cancel')
-    if (cancel) {
-      const id = document.querySelector('#ok-one').dataset.rem
-      document.querySelector(`[data-product-id="${id}"]`).focus()
-      closeModalRemove()
-      return
-    }
-
-    const ok = e.target.closest('#ok-one')
-    const products = await productsDB.getAllProducts()
-
-    if (ok) {
-      const id = +ok.dataset.rem
-      const product = products.find(prod => prod.id === id)
-      console.log(product)
-
-      if (product) {
-        removeProduct(product.id)
-      }
-      return
-    }
-    return
-    
-  }
-
   async function removeProduct(productId) {
     await productsDB.deleteProduct(productId)
 
@@ -598,7 +376,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
       await renderAllProducts()
 
-      closeModal(menu)
+      modalManager.closeModal()
     }
   }
 
@@ -919,7 +697,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     await renderAllProducts()
 
-    closeModalReturn(sectionArchive.querySelector('.section__item'))
+    modalManager.closeModalReturn()
   }
 
   const formSearchBtn = document.querySelector('.form-search__btn')
