@@ -131,7 +131,7 @@ function renderProductsToSection(section, prod) {
     }
 }
   
-function renderProductsToArchive(section, product) {
+export function renderProductsToArchive(section, product) {
     const ul = section.querySelector('ul')
     if (!ul) return
 

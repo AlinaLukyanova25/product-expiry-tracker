@@ -26,7 +26,8 @@ import { calculateDateDifference } from './utils/date-utils.js'
 import {
   createProductCardComponent,
   creaeteArchiveCardComponent,
-  renderInitialProducts
+  renderInitialProducts,
+  renderProductsToArchive
 } from './products.js'
 
 import {
@@ -327,82 +328,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
   }
 
-  function renderProductsToArchive(section, product) {
-    const ul = section.querySelector('ul')
-    if (!ul) return
-
-    if (ul.querySelector('p')?.textContent === 'Пока ничего нет...') {
-      ul.innerHTML = ''
-    }
-
-    const li = document.createElement('li')
-    li.classList.add('card', 'section__item')
-    li.setAttribute('data-product-id', product.id)
-    li.setAttribute('tabindex', '0')
-    li.innerHTML = creaeteArchiveCardComponent(product)
-    ul.append(li)
-  }
-
-  async function removeProduct(productId) {
-    await productsDB.deleteProduct(productId)
-
-    closeModalRemove()
-
-    renderAllProducts()
-  }
-
   //archive
-  
-
-  modal.addEventListener('click', pushToArchive)
-  modal.addEventListener('click', autoCalculate)
-  
-  async function pushToArchive(e) {
-    const btnArchive = e.target.closest('.modal__push-archive')
-    if (!btnArchive) return
-    e.preventDefault()
-
-    const modalDateInput = document.getElementById('modal-date')
-    const id = +modalDateInput.dataset.id
-    const product = await productsDB.getProductById(id)
-    console.log(product)
-
-    if (product) {
-      product.inArchive = true
-
-      console.log('Продукт обновлен:', product)
-
-      await productsDB.updateProduct(product)
-
-      await renderAllProducts()
-
-      modalManager.closeModal()
-    }
-  }
-
-  async function autoCalculate(e) {
-    const btnAutoCalc = e.target.closest('.modal__button--calc')
-    if (!btnAutoCalc) return
-    e.preventDefault()
-
-    const modalDateInput = document.getElementById('modal-date')
-    const id = +modalDateInput.dataset.id
-    const product = await productsDB.getProductById(id)
-    const modalSelect = document.querySelector('.modal__select')
-
-      if (modalSelect.value === 'day') {
-        let date = new Date(modal.dateProd.value)
-        date.setDate(date.getDate() + product.shelfLife)
-        modalDateInput.value = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
-      }
-    if (modalSelect.value === 'month') {
-      const startDate = new Date(modal.dateProd.value)
-
-      const months = (new Date(product.expiryDate) - new Date(product.productionDate)) / 86400000 / 30
-      startDate.setMonth(startDate.getMonth() + Math.round(months))
-      modalDateInput.value = `${startDate.getFullYear()}-${String(startDate.getMonth() + 1).padStart(2, '0')}-${String(startDate.getDate()).padStart(2, '0')}`
-      }
-  }
 
   modal.addEventListener('click', openCalculator)
   modalReturn.addEventListener('click', openCalculator)
@@ -571,103 +497,6 @@ document.addEventListener('DOMContentLoaded', async function () {
   })
 
   modalReturn.addEventListener('submit', returnFromArchive)
-  modalReturn.addEventListener('click', autoCalculateArchive)
-
-  async function autoCalculateArchive(e) {
-    const btnAutoCalc = e.target.closest('.modal-return__button--calc')
-    if (!btnAutoCalc) return
-    e.preventDefault()
-
-    const modalDateInput = document.getElementById('modal-return-date')
-    const id = +modalDateInput.dataset.modal
-    const product = await productsDB.getProductById(id)
-    if (!product) {
-      console.warn('Продукт не найден')
-      return
-    }
-    const dateProdInput = document.getElementById('modal-return-date-prod')
-    elementCheck(dateProdInput, 'поле ввода')
-    const modalReturnSelect = document.querySelector('.modal-return__select')
-    elementCheck(modalReturnSelect, 'select')
-    
-    if (modalReturnSelect.value === 'day') {
-      let date = new Date(dateProdInput.value)
-      date.setDate(date.getDate() + product.shelfLife)
-      modalDateInput.value = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
-    }
-
-    if (modalReturnSelect.value === 'month') {
-      const startDate = new Date(dateProdInput.value)
-      const months = (new Date(product.expiryDate) - new Date(product.productionDate)) / 86400000 / 30
-      startDate.setMonth(startDate.getMonth() + Math.round(months))
-      modalDateInput.value = `${startDate.getFullYear()}-${String(startDate.getMonth() + 1).padStart(2, '0')}-${String(startDate.getDate()).padStart(2, '0')}`
-    }
-    
-  }
-
-  modalReturn.addEventListener('click', downloadImageArchive)
-
-  async function downloadImageArchive(e) {
-    if (e.target.closest('.image-preview')) {
-      const modalDateInput = document.getElementById('modal-return-date')
-      const id = +modalDateInput.dataset.modal
-      const product = await productsDB.getProductById(id)
-      console.log('archive down', id, product)
-      if (!product) return
-      try {
-        const input = document.createElement('input')
-        input.type = 'file'
-        input.accept = 'image/*'
-
-        input.onchange = async function (event) {
-          const file = event.target.files[0];
-          if (!file) return
-
-          if (!file.type.startsWith('image/')) {
-            alert('Выберите файл для изображения!')
-            return
-          }
-
-          if (file.size > 5 * 1024 * 1024) {
-            alert('Изображение слишком большое. Максимум 5МВ')
-            return
-          }
-
-        const reader = new FileReader()
-
-        reader.onload = async function (e) {
-          try {
-          const compressedImage = await compressImage(e.target.result)
-        
-          if (!modalReturn.querySelector('.image-preview img')) {
-            modalReturn.querySelector('.image-preview').innerHTML = `<img src="${compressedImage}" alt="${product.name}">`
-          } else {
-            modalReturn.querySelector('.image-preview img').src = e.target.result
-          }
-            
-          } catch (error) {
-
-            }
-        }
-          
-        reader.onerror = (error) => {
-          console.error('Ошибка при чтении файла:', error)
-        }
-
-        reader.readAsDataURL(file)
-
-        setTimeout(() => input.remove(), 100)
-
-        }
-
-      input.click()
-        
-    } catch (error) {
-      console.error('Ошибка при загрузке фото:', error)
-    }
-    return
-   }
- }
 
   async function returnFromArchive(e) {
     e.preventDefault()

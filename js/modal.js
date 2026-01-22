@@ -64,6 +64,8 @@ export class ModalManager {
         this.modal.addEventListener('click', (e) => this.handleModalClick(e))
 
         this.modal.addEventListener('submit', (e) => this.handleModalSubmit(e))
+
+        this.modalReturn.addEventListener('click', (e) => this.handleReturnModalClick(e))
     }
 
     async handleDocumnetClick(e) {
@@ -127,10 +129,6 @@ export class ModalManager {
         arrow.addEventListener('click', (e) => {
             e.preventDefault()
             this.closeModalReturn()
-        // modalReturn.classList.remove('open-return')
-        // document.body.classList.remove('no-scroll');
-        // window.scrollTo(0, window.scrollPosition)
-        // document.querySelector(`[data-product-id="${id}"]`).focus()
         })
     }
 
@@ -159,7 +157,6 @@ export class ModalManager {
     }
 
     async handleRemoveModalClick(e) {
-        const cancel = e.target.closest('.cancel')
         
         if (e.target.classList.contains('cancel')) {
             this.closeModalRemove()
@@ -179,12 +176,36 @@ export class ModalManager {
 
     async handleModalClick(e) {
         if (e.target.closest('.image-preview')) { 
-            await this.downloadImage(e)
+            await this.downloadImage(e, this.modal)
+            return
+        }
+
+        if (e.target.closest('.modal__push-archive')) {
+            await this.pushToArchive(e)
+            return
+        }
+
+        if (e.target.closest('.modal__button--calc')) {
+            await this.autoCalculate(e, this.modal)
+            return
+        }
+    }
+    
+    async handleReturnModalClick(e) {
+        if (e.target.closest('.image-preview')) {
+            await this.downloadImage(e, this.modalReturn)
+            return
+        }
+
+        if (e.target.closest('.modal-return__button--calc')) {
+            await this.autoCalculate(e, this.modalReturn)
+            return
         }
     }
 
-    async downloadImage(e) {
-        const modalDateInput = document.getElementById('modal-date')
+    async downloadImage(e, modal) {
+        // const modalDateInput = document.getElementById('modal-date')
+        const modalDateInput = modal.date
         if (!modalDateInput) return
 
         const id = +modalDateInput.dataset.id
@@ -195,7 +216,7 @@ export class ModalManager {
         return
         }
 
-        const preview = this.modal.querySelector('.image-preview')
+        const preview = modal.querySelector('.image-preview')
         
         try {
             const input = document.createElement('input')
@@ -297,6 +318,53 @@ export class ModalManager {
         }
     }
 
+    async pushToArchive(e) {
+        e.preventDefault()
+
+        const modalDateInput = document.getElementById('modal-date')
+        const id = +modalDateInput.dataset.id
+        const product = await this.productsDB.getProductById(id)
+        
+        if (product) {
+            product.inArchive = true
+        
+            console.log('Продукт обновлен:', product)
+        
+            await this.productsDB.updateProduct(product)
+        
+            await this.renderAllProducts()
+        
+            this.closeModal()
+        }
+    }
+
+    async autoCalculate(e, modal) {
+        e.preventDefault()
+
+        const modalDateInput = modal.date
+        const id = +modalDateInput.dataset.id
+        const product = await this.productsDB.getProductById(id)
+        const modalSelect = modal.querySelector('select')
+
+        if (modalSelect.value === 'day') {
+            let date = new Date(modal.dateProd.value)
+            
+            date.setDate(date.getDate() + product.shelfLife)
+            
+            modalDateInput.value = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
+        }
+
+        if (modalSelect.value === 'month') {
+            const startDate = new Date(modal.dateProd.value)
+
+            const months = (new Date(product.expiryDate) - new Date(product.productionDate)) / 86400000 / 30
+      
+            startDate.setMonth(startDate.getMonth() + Math.round(months))
+      
+            modalDateInput.value = `${startDate.getFullYear()}-${String(startDate.getMonth() + 1).padStart(2, '0')}-${String(startDate.getDate()).padStart(2, '0')}`
+      }
+    }
+
     toModalComponent(card, id) {
     return `
     <h2 class="modal__title">${card.name}</h2>
@@ -366,7 +434,7 @@ export class ModalManager {
     </div>
     <button class="btn modal-return__button--calc">Автоматический расчет</button>
     <label class="modal-return__label" for="modal-return-date">Дата окончания срока</label>
-    <input class="input-field modal-return__end-date" id="modal-return-date" type="date" name="date" data-modal="${id}" min="${DateUtils.getTomorrowDateString()}" style="width: 100%;" required>
+    <input class="input-field modal-return__end-date" id="modal-return-date" type="date" name="date" data-modal="${id}" data-id="${id}" min="${DateUtils.getTomorrowDateString()}" style="width: 100%;" required>
     <button class="btn modal-return__button" type="submit">Вернуть из архива</button>
     `
     }
