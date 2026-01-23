@@ -36,8 +36,14 @@ export class FormSearch {
 
         this.searchInput.addEventListener('touchstart', (e) => {
         e.preventDefault()
-        this.searchInput.focus()
+            this.searchInput.focus()
+            this.searchInput.readOnly = false;
         }, { passive: false })
+
+        this.searchInput.addEventListener('click', (e) => {
+            e.preventDefault()
+            this.searchInput.readOnly = false;
+        })
 
         this.searchInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' || e.keyCode === 13) {
@@ -90,6 +96,8 @@ export class FormSearch {
             }
 
             await this.performSearch(filteredProducts, activeSection, searchTerm)
+
+            this.searchInput.readOnly = true;
 
         } finally {
             setTimeout(() => {
@@ -159,6 +167,8 @@ export class FormSearch {
             this.formSearchClear.style.display = 'none'
         } else {
             setTimeout(() => this.searchInput.focus(), 100)
+            
+            // this.searchInput.focus()
         }
     }
 
