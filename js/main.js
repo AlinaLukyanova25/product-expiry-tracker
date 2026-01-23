@@ -24,6 +24,7 @@ import {
   createProductCardComponent,
   renderInitialProducts,
   renderProductsToArchive,
+  renderProductsToSection,
   renderAllProducts
 } from './products.js'
 
@@ -35,6 +36,10 @@ import {
 import {
  ExpiryCalendar,
 } from './calendar.js'
+
+import {
+  FormSearch
+} from './modules/form-search.js'
 
 import {
   modalCheck,
@@ -230,154 +235,167 @@ document.addEventListener('DOMContentLoaded', async function () {
 
   const dateCalculator = new DateCalculator()
 
-  const formSearchBtn = document.querySelector('.form-search__btn')
-  elementCheck(formSearchBtn, 'кнопка поиска')
-
-  formSearchBtn.addEventListener('click', searchProducts)
-
-  let isSearching = false
-
-  async function searchProducts(e) {
-    e.preventDefault()
-
-    if (isSearching) return
-    isSearching = true
-    try {
-      const needProduct = searchInput.value
-    if (searchInput.value === '') return
-    if (!needProduct) return
-    searchInput.removeEventListener('blur', inputBlur)
-    searchInput.blur()
-    formSearchClear.style.display = 'none'
-    searchInput.removeEventListener('input', inputEvent)
-
-    const allSection = [
-      sectionProductsAll,
-      sectionProductsFresh,
-      sectionProductsSoon,
-      sectionProductsExpired,
-      sectionArchive,
-    ]
-
-    const collectionProd = await productsDB.getAllProducts()
-    let products = []
-    for (let prod of collectionProd) {
-      products.push(prod)
-    }
-
-    let needProducts = []
-
-    for (const section of allSection) {
-      if (section.style.display === 'block') {
-        if (section.classList.contains('section--archive')) {
-          needProducts = products.filter(prod => prod.inArchive)
-          await filterNeedProducts(needProducts, section, needProduct)
-          needProducts = []
-          break
-        }
-
-        if (section.classList.contains('section--expired')) {
-          needProducts = products.filter(prod => calculateDateDifference(prod.expiryDate) <= 0 && !prod.inArchive)
-          await filterNeedProducts(needProducts, section, needProduct)
-          needProducts = []
-          break
-        }
-
-        if (section.classList.contains('section--soon')) {
-          needProducts = products.filter(prod => calculateDateDifference(prod.expiryDate) <= 3 && calculateDateDifference(prod.expiryDate) > 0 && !prod.inArchive)
-          await filterNeedProducts(needProducts, section, needProduct)
-          needProducts = []
-          break
-        }
-
-        if (section.classList.contains('section--fresh')) {
-          needProducts = products.filter(prod => calculateDateDifference(prod.expiryDate) > 3 && !prod.inArchive)
-          await filterNeedProducts(needProducts, section, needProduct)
-          needProducts = []
-          break
-        }
-
-        if (section.classList.contains('section--all')) {
-          needProducts = products.filter(prod => !prod.inArchive)
-          await filterNeedProducts(needProducts, section, needProduct)
-          needProducts = []
-          break
-        }
-      }
-    };
-    } finally {
-      setTimeout(() => isSearching = false, 300)
-    }
-  }
-
-  searchInput.addEventListener('touchstart', function (e) {
-    this.focus()
-  }, { passive: false })
-
-  searchInput.addEventListener('keydown', function (event) {
-    if (event.key === 'Enter' || event.keyCode === 13) {
-      formSearchBtn.click()
-    }
-  });
-
-  searchInput.addEventListener('input', inputEvent)
-
-  function inputEvent(e) {
-    if (searchInput.value !== '') {
-      formSearchClear.style.display = 'block'
-      renderAllProducts(productsDB, filterSelect, sections)
-    } else {
-      formSearchClear.style.display = 'none'
-      renderAllProducts(productsDB, filterSelect, sections)
-    }
-  }
-
-  searchInput.addEventListener('focus', function (e) {
-    let coords = searchInput.getBoundingClientRect()
-    formSearchClear.style.left = coords.x + coords.width - 30 + 'px'
-    let heightInput = coords.height / 2
-    formSearchClear.style.top = Math.round(coords.y + Math.round(heightInput)) - 10 + 'px'
-    formSearchClear.style.display = 'block'
+  const formSearch = new FormSearch({
+    searchInput: document.getElementById('search'),
+    formSearchBtn: document.querySelector('.form-search__btn'),
+    formSearchClear: document.querySelector('.form-search__remove'),
+    sections,
+    productsDB,
+    filterSelect,
+    renderAllProducts,
+    renderProductsToArchive,
+    renderProductsToSection,
+    calculateDateDifference
   })
 
-  formSearchClear.addEventListener('click', (e) => {
-    if (!e.target.closest('.form-search__remove')) return
+  // const formSearchBtn = document.querySelector('.form-search__btn')
+  // elementCheck(formSearchBtn, 'кнопка поиска')
 
-    if (searchInput.value) {
-      searchInput.value = ''
-      renderAllProducts(productsDB, filterSelect, sections)
-    }
-    searchInput.blur()
-    formSearchClear.style.display = 'none'
-  })
+  // formSearchBtn.addEventListener('click', searchProducts)
 
-  searchInput.addEventListener('blur', inputBlur)
+  // let isSearching = false
 
-  function inputBlur() {
-    if (searchInput.value === '') {
-      formSearchClear.style.display = 'none'
-    } else {
-      searchInput.focus()
-    }
-  }
+  // async function searchProducts(e) {
+  //   e.preventDefault()
+
+  //   if (isSearching) return
+  //   isSearching = true
+  //   try {
+  //     const needProduct = searchInput.value
+  //   if (searchInput.value === '') return
+  //   if (!needProduct) return
+  //   searchInput.removeEventListener('blur', inputBlur)
+  //   searchInput.blur()
+  //   formSearchClear.style.display = 'none'
+  //   searchInput.removeEventListener('input', inputEvent)
+
+  //   const allSection = [
+  //     sectionProductsAll,
+  //     sectionProductsFresh,
+  //     sectionProductsSoon,
+  //     sectionProductsExpired,
+  //     sectionArchive,
+  //   ]
+
+  //   const collectionProd = await productsDB.getAllProducts()
+  //   let products = []
+  //   for (let prod of collectionProd) {
+  //     products.push(prod)
+  //   }
+
+  //   let needProducts = []
+
+  //   for (const section of allSection) {
+  //     if (section.style.display === 'block') {
+  //       if (section.classList.contains('section--archive')) {
+  //         needProducts = products.filter(prod => prod.inArchive)
+  //         await filterNeedProducts(needProducts, section, needProduct)
+  //         needProducts = []
+  //         break
+  //       }
+
+  //       if (section.classList.contains('section--expired')) {
+  //         needProducts = products.filter(prod => calculateDateDifference(prod.expiryDate) <= 0 && !prod.inArchive)
+  //         await filterNeedProducts(needProducts, section, needProduct)
+  //         needProducts = []
+  //         break
+  //       }
+
+  //       if (section.classList.contains('section--soon')) {
+  //         needProducts = products.filter(prod => calculateDateDifference(prod.expiryDate) <= 3 && calculateDateDifference(prod.expiryDate) > 0 && !prod.inArchive)
+  //         await filterNeedProducts(needProducts, section, needProduct)
+  //         needProducts = []
+  //         break
+  //       }
+
+  //       if (section.classList.contains('section--fresh')) {
+  //         needProducts = products.filter(prod => calculateDateDifference(prod.expiryDate) > 3 && !prod.inArchive)
+  //         await filterNeedProducts(needProducts, section, needProduct)
+  //         needProducts = []
+  //         break
+  //       }
+
+  //       if (section.classList.contains('section--all')) {
+  //         needProducts = products.filter(prod => !prod.inArchive)
+  //         await filterNeedProducts(needProducts, section, needProduct)
+  //         needProducts = []
+  //         break
+  //       }
+  //     }
+  //   };
+  //   } finally {
+  //     setTimeout(() => isSearching = false, 300)
+  //   }
+  // }
+
+  // searchInput.addEventListener('touchstart', function (e) {
+  //   this.focus()
+  // }, { passive: false })
+
+  // searchInput.addEventListener('keydown', function (event) {
+  //   if (event.key === 'Enter' || event.keyCode === 13) {
+  //     formSearchBtn.click()
+  //   }
+  // });
+
+  // searchInput.addEventListener('input', inputEvent)
+
+  // function inputEvent(e) {
+  //   if (searchInput.value !== '') {
+  //     formSearchClear.style.display = 'block'
+  //     renderAllProducts(productsDB, filterSelect, sections)
+  //   } else {
+  //     formSearchClear.style.display = 'none'
+  //     renderAllProducts(productsDB, filterSelect, sections)
+  //   }
+  // }
+
+  // searchInput.addEventListener('focus', function (e) {
+  //   let coords = searchInput.getBoundingClientRect()
+  //   formSearchClear.style.left = coords.x + coords.width - 30 + 'px'
+  //   let heightInput = coords.height / 2
+  //   formSearchClear.style.top = Math.round(coords.y + Math.round(heightInput)) - 10 + 'px'
+  //   formSearchClear.style.display = 'block'
+  // })
+
+  // formSearchClear.addEventListener('click', (e) => {
+  //   if (!e.target.closest('.form-search__remove')) return
+
+  //   if (searchInput.value) {
+  //     searchInput.value = ''
+  //     renderAllProducts(productsDB, filterSelect, sections)
+  //   }
+  //   searchInput.blur()
+  //   formSearchClear.style.display = 'none'
+  // })
+
+  // searchInput.addEventListener('blur', inputBlur)
+
+  // function inputBlur() {
+  //   if (searchInput.value === '') {
+  //     formSearchClear.style.display = 'none'
+  //   } else {
+  //     searchInput.focus()
+  //   }
+  // }
   
-  async function filterNeedProducts(arr, section, inputValue) {
-    if (!arr) return
-    const ul = section.querySelector('ul')
-    ul.innerHTML = ''
+  // async function filterNeedProducts(arr, section, inputValue) {
+  //   if (!arr) return
+  //   const ul = section.querySelector('ul')
+  //   ul.innerHTML = ''
 
-    arr.forEach(prod => {
-      if (prod.name.toLowerCase().includes(inputValue.toLowerCase())) {
-        if (prod.inArchive) {
-          renderProductsToArchive(section, prod)
-        } else {
-          autoMakeCategory(section, prod)
-        }
-      }
-    });
+  //   arr.forEach(prod => {
+  //     if (prod.name.toLowerCase().includes(inputValue.toLowerCase())) {
+  //       if (prod.inArchive) {
+  //         renderProductsToArchive(section, prod)
+  //       } else {
+  //         autoMakeCategory(section, prod)
+  //       }
+  //     }
+  //   });
 
-    if (ul.innerHTML === '') ul.innerHTML = 'Ничего не найдено...'
-  }
+  //   if (ul.innerHTML === '') ul.innerHTML = 'Ничего не найдено...'
+  // }
 
   searchForm.addEventListener('click', removeAllProducts)
 

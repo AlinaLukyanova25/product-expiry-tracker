@@ -36,7 +36,7 @@ export class FormSearch {
 
         this.searchInput.addEventListener('touchstart', (e) => {
         e.preventDefault()
-        this.focus()
+        this.searchInput.focus()
         }, { passive: false })
 
         this.searchInput.addEventListener('keydown', (e) => {
@@ -113,6 +113,66 @@ export class FormSearch {
     }
 
     async performSearch(products, section, searchTerm) {
-        
+        if (!products || !section) return
+
+        const list = section.querySelector('ul')
+        if (!list) return
+
+        list.innerHTML = ''
+
+        const searchTermLower = searchTerm.toLowerCase()
+        const matchingProducts = products.filter(product => product.name.toLowerCase().includes(searchTermLower))
+
+        if (matchingProducts.length === 0) {
+            list.innerHTML = '<p>Ничего не найдено...</p>'
+            return
+        }
+
+        matchingProducts.forEach(product => {
+            if (product.inArchive) {
+                this.renderProductsToArchive(section, product)
+            } else {
+                this.renderProductsToSection(section, product)
+            }
+        });
+    }
+
+    handleInput() {
+        const hasValue = this.searchInput.value.trim() !== ''
+        this.formSearchClear.style.display = hasValue ? 'block' : 'none'
+
+        if (!hasValue) {
+            this.renderAllProducts(this.productsDB, this.filterSelect, this.sections)
+        }
+    }
+
+    handleFocus() {
+        const rect = this.searchInput.getBoundingClientRect()
+        this.formSearchClear.style.left = `${rect.x + rect.width - 30}px`
+        const verticalCenter = rect.y + (rect.height / 2)
+        this.formSearchClear.style.top = `${Math.round(verticalCenter) - 10}px`
+        this.formSearchClear.style.display = this.searchInput.value ? 'block' : 'none'
+    }
+
+    handleBlur() {
+        if (!this.searchInput.value.trim()) {
+            this.formSearchClear.style.display = 'none'
+        } else {
+            setTimeout(() => this.searchInput.focus(), 100)
+        }
+    }
+
+    handleClear(e) {
+        if (!e.target.closest('.form-search__remove')) return
+
+        e.preventDefault()
+
+        if (this.searchInput.value) {
+            this.searchInput.value = ''
+            this.renderAllProducts(this.productsDB, this.filterSelect, this.sections)
+        }
+
+        this.searchInput.blur()
+        this.formSearchClear.style.display = 'none'
     }
 }

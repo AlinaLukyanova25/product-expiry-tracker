@@ -119,7 +119,7 @@ export async function renderAllProducts(productsDB, filterSelect, sections) {
   await renderInitialProducts(productsDB, filterSelect, sections)
 }
   
-function renderProductsToSection(section, prod) {
+export function renderProductsToSection(section, prod) {
     const ul = section.querySelector('ul')
     if (ul.querySelector('p')?.textContent === 'Пока ничего нет...') {
       ul.innerHTML = ''
