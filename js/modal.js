@@ -22,8 +22,11 @@ export class ModalManager {
         this.modalReturn = document.getElementById('modal-return');
         this.backdropReturn = document.getElementById('return-backdrop');
 
-        this.currentProductId = null;
         this.currentCard = null;
+
+        this.currentRemoveContext = null;
+        this.currentSection = null;
+
         this.scrollPosition = 0;
 
         this.init()
@@ -86,7 +89,7 @@ export class ModalManager {
         document.body.classList.add('no-scroll')
 
         if (e.target.closest('.section__btn-remove')) { 
-            this.openRemoveModal(product, id)
+            this.openSingleRemoveModal(product, id)
         } else if (e.target.closest('.section--archive')) {
             this.openReturnModal(product, id)
         } else {
@@ -103,7 +106,6 @@ export class ModalManager {
         this.modal.prepend(arrow)
 
         this.currentCard = card;
-        this.currentProductId = id;
 
         arrow.addEventListener('click', (e) => {
             e.preventDefault()
@@ -111,11 +113,24 @@ export class ModalManager {
         })
     }
 
-    openRemoveModal(product, id) {
+    openSingleRemoveModal(product, id) {
+        this.currentRemoveContext = 'single'
+        this.productIdToRemove = id
+
         const html = this.createModalRemoveComponent(product, id)
         this.modalRemove.innerHTML = html
         this.modalRemove.classList.add('open-remove')
-        this.currentProductId = id
+    }
+
+    openRemoveAllModal(sectionElement, scrollPosition = 0) {
+        this.currentRemoveContext = 'all'
+        this.currentSection = sectionElement
+        this.scrollPosition = scrollPosition
+
+        const sectionTitle = sectionElement.querySelector('h2').innerHTML
+        const html = this.createModalRemoveAllComponent(sectionTitle)
+        this.modalRemove.innerHTML = html
+        this.modalRemove.classList.add('open-remove')
     }
 
     openReturnModal(product, id) {
@@ -125,7 +140,6 @@ export class ModalManager {
         this.modalReturn.classList.add('open-return')
         this.modalReturn.prepend(arrow)
 
-        this.currentProductId = id
         this.currentCard = document.querySelector(`[data-product-id="${id}"]`)
 
         arrow.addEventListener('click', (e) => {
@@ -146,6 +160,10 @@ export class ModalManager {
         this.modalRemove.classList.remove('open-remove')
         document.body.classList.remove('no-scroll');
         window.scrollTo(0, this.scrollPosition)
+
+        this.currentRemoveContext = null
+        this.currentSection = null
+        this.productIdToRemove = null
     }
 
     closeModalReturn() {
@@ -166,14 +184,36 @@ export class ModalManager {
         }
 
         if (e.target.classList.contains('ok')) {
-            const id = e.target.dataset.rem
+            if (this.currentRemoveContext === 'single') {
+                await this.handleSingleProductRemove()
+            } else if (this.currentRemoveContext === 'all') {
+                await this.handleAllProductsRemove()
+            }
+            this.closeModalRemove()
+        }
+    }
 
-            if (id) {
-                await this.productsDB.deleteProduct(+id)
-                await this.renderAllProducts()
-                this.closeModalRemove()
+    async handleSingleProductRemove() {
+        if (this.productIdToRemove) {
+            await this.productsDB.deleteProduct(+this.productIdToRemove)
+            await this.renderAllProducts()
+        }
+    }
+
+    async handleAllProductsRemove() {
+        if (!this.currentSection) return
+
+        const products = await this.productsDB.getAllProducts()
+        const productCards = this.currentSection.querySelectorAll('li')
+
+        for (const card of productCards) {
+            const id = +card.dataset.productId
+            const product = products.find(prod => prod.id = id)
+            if (product) {
+                await this.productsDB.deleteProduct(id)
             }
         }
+        await this.renderAllProducts()
     }
 
     async handleModalClick(e) {
@@ -206,7 +246,6 @@ export class ModalManager {
     }
 
     async downloadImage(e, modal) {
-        // const modalDateInput = document.getElementById('modal-date')
         const modalDateInput = modal.date
         if (!modalDateInput) return
 
@@ -471,6 +510,16 @@ export class ModalManager {
     `
     }
 
+    createModalRemoveAllComponent(section) {
+    return `
+    <p class="modal-remove__descr">Вы действительно хотите удалить все продукты в секции "${section}"?</p>
+    <div class="modal-remove__buttons">
+      <button class="btn modal-remove__btn cancel">Отмена</button>
+      <button class="btn modal-remove__btn ok" id="ok-all">Да</button>
+    </div>
+    `
+    }
+
     clearSearch() {
         document.querySelectorAll('section').forEach(element => {
             if (element.style.display !== 'none' && element.className !== 'calendar') {
@@ -513,15 +562,7 @@ export function toModalComponent(card, id) {
     `
 }
 
-export function createModalRemoveAllComponent(section) {
-    return `
-    <p class="modal-remove__descr">Вы действительно хотите удалить все продукты в секции "${section}"?</p>
-    <div class="modal-remove__buttons">
-      <button class="btn modal-remove__btn cancel">Отмена</button>
-      <button class="btn modal-remove__btn ok" id="ok-all">Да</button>
-    </div>
-    `
-}
+
 
 
 

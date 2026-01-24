@@ -80,7 +80,32 @@ calcForm.addEventListener('submit', function (e) {
         calcDateEnd.textContent = calculateExpirationDate(calcDateStart.value, calcDays.value, calcMonths.value)
         btnAddToForm.style.display = 'block'
   }
-  })
+})
+
+const dateManufactureProduct = document.getElementById('date-manufacture')
+const dateInput = document.getElementById('end-date');
+  
+const sectionForm = document.getElementById('form')
+  elementCheck(sectionForm, 'форма')
+
+  btnAddToForm.addEventListener('click', transferToAddForm)
+
+  function transferToAddForm() {
+    if (window.innerWidth < 814) {
+       sectionForm.style.display = 'flex'
+      } else {
+      sectionForm.style.display = 'block'
+    }
+    sectionHero.style.display = 'none'
+
+    const link = document.querySelector('a[href="#form"]');
+
+    link.closest('li').classList.add('active')
+
+    let date = dateToAddForm(calcDateStart.value, calcDays.value, calcMonths.value)
+    dateManufactureProduct.value = calcDateStart.value
+    dateInput.value = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
+  }
   
 export  function showError(input, message) {
     clearError(input)
