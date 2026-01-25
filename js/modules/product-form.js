@@ -1,6 +1,4 @@
-import {
-  DateUtils
-} from './../state.js'
+import { DateUtils } from './../state.js'
 
 import {createImageUploadHandler} from './../utils/image-uploader.js'
 

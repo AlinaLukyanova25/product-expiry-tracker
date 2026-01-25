@@ -2,9 +2,11 @@ import { productsDB } from './storage.js'
 
 import {initMenu} from './modules/menu.js'
 
-import {initForms} from './modules/product-form.js'
+import { initForms } from './modules/product-form.js'
 
-import { DateCalculator } from './calculator.js'
+import { HeroCalculator } from './modules/hero-calculator.js'
+
+import { DateCalculator } from './modules/modal-calculator.js'
 
 import { calculateDateDifference } from './utils/date-utils.js'
 
@@ -27,6 +29,8 @@ import { elementCheck } from './utils.js'
 
 document.addEventListener('DOMContentLoaded', async function () {
   await productsDB.initialize()
+
+  const heroCalculator = new HeroCalculator()
 
   const sections = {
     archive: document.getElementById('archive'),
