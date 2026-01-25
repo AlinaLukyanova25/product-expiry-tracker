@@ -4,7 +4,6 @@ import {
 
 import {
  productCategoryTranslation,
-//  formatDateCard
 } from './products.js'
 
 import {formatDateCard} from './utils/date-utils.js'

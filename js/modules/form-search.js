@@ -29,6 +29,7 @@ export class FormSearch {
 
     init() {
         this.setupEventListeners()
+        this.setupSortListener()
     }
 
     setupEventListeners() {
@@ -50,6 +51,18 @@ export class FormSearch {
         this.searchInput.addEventListener('focus', () => this.handleFocus())
         this.searchInput.addEventListener('blur', () => this.handleBlur())
         this.formSearchClear.addEventListener('click', (e) => this.handleClear(e))
+    }
+
+    setupSortListener() {
+        if (!this.filterSelect) {
+            console.error('Фильтр сортировки не найден')
+            return
+        }
+
+        this.filterSelect.addEventListener('change', () => this.renderAllProducts(this.productsDB, this.filterSelect, this.sections))
+
+        this.searchInput.value = ''
+        this.formSearchClear.style.display = 'none'
     }
 
     async searchProducts(e) {

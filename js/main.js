@@ -28,24 +28,6 @@ import { elementCheck } from './utils.js'
 document.addEventListener('DOMContentLoaded', async function () {
   await productsDB.initialize()
 
-  const searchForm = document.getElementById('form-search')
-  elementCheck(searchForm, 'форма поиска')
-
-  initMenu()
-
-  //filter
-
-  const filterSelect = document.getElementById('sort-filter')
-
-  if (!filterSelect) {
-    console.error('Фильтр не найден')
-    return
-  }
-
-  filterSelect.addEventListener('change', () => renderAllProducts(productsDB, filterSelect, sections))
-
-  initForms(productsDB, () => renderAllProducts(productsDB, filterSelect, sections), calendarR)
-
   const sections = {
     archive: document.getElementById('archive'),
     all: document.getElementById('all-products'),
@@ -53,6 +35,15 @@ document.addEventListener('DOMContentLoaded', async function () {
     expired: document.getElementById('expired-products'),
     fresh: document.getElementById('fresh-products'),
   }
+
+  const searchForm = document.getElementById('form-search')
+  elementCheck(searchForm, 'форма поиска')
+
+  initMenu()
+
+  const filterSelect = document.getElementById('sort-filter')
+
+  initForms(productsDB, () => renderAllProducts(productsDB, filterSelect, sections), calendarR)
 
   renderInitialProducts(productsDB, filterSelect, sections)
 
