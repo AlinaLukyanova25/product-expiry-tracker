@@ -2,7 +2,7 @@ import { DateUtils } from './../state.js'
 
 import {createImageUploadHandler} from './../utils/image-uploader.js'
 
-export function initForms(productsDB, renderAllProducts, calendarR) {
+export function initForms(productsDB, renderAllProducts, calendar) {
     const addFormProducts = document.getElementById('add-form');
     const nameProduct = document.getElementById('name-product');
     const categoryProduct = document.getElementById('category');
@@ -42,7 +42,7 @@ export function initForms(productsDB, renderAllProducts, calendarR) {
     
         addFormProducts.querySelector('.image-preview').innerHTML = ''
         renderAllProducts()
-        calendarR()
+        await calendar.update()
     
         addFormProducts.reset()
       })

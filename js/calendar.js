@@ -21,11 +21,13 @@ import {
 } from './utils/dom-utils.js'
 
 export class ExpiryCalendar {
-    constructor(products) {
-        this.currentDate = new Date()
-        this.products = products
-        this.currentSelectedDate = null
-        this.currentModalProducts = null
+    constructor(productsDB) {
+        this.currentDate = new Date();
+        this.productsDB = productsDB;
+        this.products = [];
+        // this.products = products
+        this.currentSelectedDate = null;
+        this.currentModalProducts = null;
         this.init()
 
         this.modalContainer = document.querySelector('.modal-calendar')
@@ -39,9 +41,25 @@ export class ExpiryCalendar {
         })
     }
 
-    init() {
+    async init() {
+        await this.loadProducts()
         this.renderCalendar()
         this.setupEventListeners()
+    }
+
+    async loadProducts() {
+        try {
+            const collection = await this.productsDB.getAllProducts()
+            this.products = Array.from(collection)
+        } catch {
+            console.error('Ошибка загрузки продуктов для календаря: ', error)
+            this.products = []
+        }
+    }
+
+    async update() {
+        await this.loadProducts()
+        this.renderCalendar()
     }
 
     updateMonthHeader() {
