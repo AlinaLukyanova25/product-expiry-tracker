@@ -18,7 +18,7 @@ import {
 
 import {
     createArrow
-} from './calculator.js'
+} from './utils/dom-utils.js'
 
 export class ExpiryCalendar {
     constructor(products) {
@@ -318,13 +318,6 @@ export class ExpiryCalendar {
                 });
             })
         }
-
-    createArrow() {
-        const arrowBack = document.createElement('button')
-        arrowBack.innerHTML = '<img src="img/arrow-left.svg" alt="Стрелка назад">'
-        arrowBack.classList.add('arrow', 'arrow-back')
-        return arrowBack
-    }
 
     createProductCardComponent(product, date) {
         const categoryDisplay = productCategoryTranslation[product.category] || product.category

@@ -3,10 +3,11 @@ import {
 } from './state.js'
 
 import {
-    createArrow,
     showError,
     clearError
-} from './calculator.js'
+} from './utils/date-utils.js'
+
+import { createArrow } from './utils/dom-utils.js'
 
 import { compressImage } from './utils/image-uploader.js'
 
