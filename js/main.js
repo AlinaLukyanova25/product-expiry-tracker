@@ -28,6 +28,7 @@ import { KeyboardNavigation } from './modules/keyboard-navigation.js'
 import { elementCheck } from './utils/dom-utils.js'
 
 document.addEventListener('DOMContentLoaded', async function () {
+  try {
   await productsDB.initialize()
 
   const heroCalculator = new HeroCalculator()
@@ -46,6 +47,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   initMenu()
 
   const filterSelect = document.getElementById('sort-filter')
+  elementCheck(filterSelect, 'фильтр сортировки')
 
   const calendar = new ExpiryCalendar(productsDB)
 
@@ -86,4 +88,9 @@ document.addEventListener('DOMContentLoaded', async function () {
       modalManager.openRemoveAllModal(activeSection)
     }
   })
+    
+  } catch {
+    console.error('Ошибка инициализации приложения', error)
+    alert('Произошла ошибка при загрузке приложения. Пожалуйста, обновите страницу.')
+  }
 })
