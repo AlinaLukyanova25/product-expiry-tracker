@@ -1,31 +1,20 @@
-import {
-    productsDB
-} from './storage.js'
+import { productsDB } from './storage.js'
 
-import {
- productCategoryTranslation,
-} from './products.js'
+import { productCategoryTranslation } from './products.js'
 
 import {formatDateCard} from './utils/date-utils.js'
 
-import {
-    toModalComponent
-} from './modal.js'
+import { toModalComponent } from './modal.js'
 
-import {
-    elementCheck
-} from './utils.js'
+import { elementCheck } from './utils/dom-utils.js'
 
-import {
-    createArrow
-} from './utils/dom-utils.js'
+import { createArrow } from './utils/dom-utils.js'
 
 export class ExpiryCalendar {
     constructor(productsDB) {
         this.currentDate = new Date();
         this.productsDB = productsDB;
         this.products = [];
-        // this.products = products
         this.currentSelectedDate = null;
         this.currentModalProducts = null;
         this.init()

@@ -4,9 +4,9 @@ import {
   dateToAddForm
 } from './../utils/date-utils.js'
 
-import { elementCheck } from './../utils.js'
+import { elementCheck } from './../utils/dom-utils.js'
 
-import { DateUtils } from './../state.js'
+import { DateUtils } from './../utils/date-utils.js'
 
 export class HeroCalculator {
     constructor() {

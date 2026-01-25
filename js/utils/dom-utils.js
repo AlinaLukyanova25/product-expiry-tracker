@@ -5,3 +5,10 @@ export function createArrow() {
     return arrowBack
 
 }
+
+export function elementCheck(element, stroke) {
+    if (!element) {
+        throw new Error(`Элемент "${stroke}" не найден`)
+    }
+    return element
+}

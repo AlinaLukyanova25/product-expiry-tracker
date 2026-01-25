@@ -1,10 +1,4 @@
-import {
-  elementCheck
-} from '../utils.js'
-
-import {
-  DateUtils
-} from '../state.js'
+import { DateUtils } from '../utils/date-utils.js'
 
 import { createArrow } from '../utils/dom-utils.js'
 

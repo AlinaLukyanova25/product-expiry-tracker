@@ -25,7 +25,7 @@ import { FormSearch } from './modules/form-search.js'
 
 import { KeyboardNavigation } from './modules/keyboard-navigation.js'
 
-import { elementCheck } from './utils.js'
+import { elementCheck } from './utils/dom-utils.js'
 
 document.addEventListener('DOMContentLoaded', async function () {
   await productsDB.initialize()
