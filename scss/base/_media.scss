@@ -1,7 +1,7 @@
 @import '../abstracts/variables';
 @import '../abstracts/mixins';
 
-@media (any-hover: hover) {
+@media #{$has-hover} {
   .btn:hover {
     outline: none;
     background-color: $dark-blue;
@@ -57,7 +57,7 @@
   }
 }
 
-@media (max-width: 1210px) {
+@media (max-width: $breakpoint-desktop) {
   .header {
     padding-right: $space-10;
     padding-left: $space-10;
@@ -92,7 +92,7 @@
   }
 }
 
-@media (max-width: 814px) {
+@media (max-width: $breakpoint-tablet) {
   body {
     font-size: $fs14;
   }
