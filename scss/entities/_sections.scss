@@ -76,7 +76,15 @@
 }
 
 .form__btn-remove {
-  @include btn-remove;
+  position: absolute;
+  background: none;
+  top: $space-5;
+  right: $space-5;
+  font-size: $fs20;
+  color: transparent;
+  text-shadow: 0 0 0 $gray-blue;
+  cursor: pointer;
+  transition: $transition-all;
   padding: $space-12 $space-16;
   border: $border-solid-2 $dark-white;
   border-radius: $border-radius-md;

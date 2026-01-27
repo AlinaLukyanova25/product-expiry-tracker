@@ -238,7 +238,7 @@ export class DateCalculator {
     <label for="modal-days">Срок годности, дней</label>
     <input class="input-field calculator__days" id="modal-days" type="number" min="1" style="width: 100%;">
     <label for="modal-months">Срок годности, месяцев</label> 
-    <input class="input-field calculator__months" id="modal-months" type="number" min="1" max="12" style="width: 100%;">
+    <input class="input-field calculator__months" id="modal-months" type="number" min="1" style="width: 100%;">
     <label for="modal-date-end">Дата окончания СГ</label>
     <div class="input-field date-end" id="modal-date-end" aria-live="polite"></div>
     <button class="btn calculator__btn" id="modal-calc-btn" type="submit">OK</button>

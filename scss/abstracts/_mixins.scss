@@ -19,21 +19,6 @@
   background-color: transparent;
 }
 
-@mixin btn-remove {
-  position: absolute;
-  border: none;
-  background: none;
-  top: $space-5;
-  right: $space-5;
-  font-size: $fs20;
-  color: transparent;
-  text-shadow: 0 0 0 $gray-blue;
-  cursor: pointer;
-  border-radius: 3px;
-  padding: $space-2;
-  transition: $transition-all;
-}
-
 @mixin auto-calc {
   display: flex;
   gap: $space-10;
