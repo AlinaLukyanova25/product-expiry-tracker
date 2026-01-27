@@ -4,17 +4,16 @@ import { productCategoryTranslation } from './products.js'
 
 import {formatDateCard} from './utils/date-utils.js'
 
-import { toModalComponent } from './modal.js'
-
 import { elementCheck } from './utils/dom-utils.js'
 
 import { createArrow } from './utils/dom-utils.js'
 
 export class ExpiryCalendar {
-    constructor(productsDB) {
+    constructor(productsDB, modalManager) {
         this.currentDate = new Date();
         this.productsDB = productsDB;
         this.products = [];
+        this.modalManager = modalManager;
         this.currentSelectedDate = null;
         this.currentModalProducts = null;
         this.init()
@@ -249,7 +248,7 @@ export class ExpiryCalendar {
         const product = this.currentModalProducts.find(prod => prod.id === id)
         
         if (!product) return
-        const html = toModalComponent(product, id)
+        const html = this.modalManager.toModalComponent(product, id)
         modal.innerHTML = html
         modal.firstElementChild.style.paddingLeft = 28 + 'px'
         modal.firstElementChild.style.marginBottom = 12 + 'px'

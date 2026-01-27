@@ -48,14 +48,14 @@ document.addEventListener('DOMContentLoaded', async function () {
 
   const filterSelect = document.getElementById('sort-filter')
   elementCheck(filterSelect, 'фильтр сортировки')
+    
+  const modalManager = new ModalManager(productsDB, () => renderAllProducts(productsDB, filterSelect, sections))
 
-  const calendar = new ExpiryCalendar(productsDB)
+  const calendar = new ExpiryCalendar(productsDB, modalManager)
 
   initForms(productsDB, () => renderAllProducts(productsDB, filterSelect, sections), calendar)
 
   renderInitialProducts(productsDB, filterSelect, sections)
-
-  const modalManager = new ModalManager(productsDB, () => renderAllProducts(productsDB, filterSelect, sections))
 
   const dateCalculator = new DateCalculator()
 

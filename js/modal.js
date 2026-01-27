@@ -1,6 +1,4 @@
-import {
-    DateUtils
-} from './utils/date-utils.js'
+import { DateUtils } from './utils/date-utils.js'
 
 import {
     showError,
@@ -529,45 +527,3 @@ export class ModalManager {
         });
     }
 }
-
-
-export function toModalComponent(card, id) {
-    return `
-    <h2 class="modal__title">${card.name}</h2>
-    <div class="image-preview" id="preview-${card.id}" tabindex="0">
-        ${card.image
-                ? `<img src="${card.image}" alt="${card.name}">`
-                : ''
-            }
-        </div>
-      <input type="file"
-        id="file-${card.id}"
-        accept="image/*"
-        style="display: none;">
-    <label class="modal__label" for="modal-date-production">Дата изготовления</label>
-    <input class="input-field modal__date-production" id="modal-date-production" type="date" name="dateProd" data-id="${id}" max="${DateUtils.getTodayDateString()}" value="${card.productionDate}" style="width: 100%;" required>
-    <div class="modal__auto-calc">
-    <label class="modal__label" for="auto">Автоматический расчет по</label>
-    <select class="input-field modal__select" id="auto" style="width: 100%;">
-    <option value="" disabled selected>Выберите вариант</option>
-    <option value="day">дням</option>
-    <option value="month">месяцам</option>
-    </select>
-    <button class="modal__calculator"><img class="modal__img" src="img/calculator.svg" alt="Калькулятор"></button>
-    </div>
-    <button class="btn modal__button--calc">Автоматический расчет</button>
-    <label class="modal__label" for="modal-date">Дата окончания срока</label>
-    <input class="input-field modal__end-date" id="modal-date" type="date" name="date" data-id="${id}" min="${DateUtils.getTomorrowDateString()}" value="${card.expiryDate}" style="width: 100%;" required>
-    <button class="btn modal__button" type="submit">Сохранить изменения</button>
-    <button class="btn modal__push-archive">Добавить в архив</button>
-    `
-}
-
-
-
-
-
-
-
-
-
