@@ -5,10 +5,11 @@
   @include section-style;
 
   &__title {
-  margin-bottom: $space-24;
-  border-bottom: 3px solid;
-  display: inline-block;
+    margin-bottom: $space-24;
+    border-bottom: 3px solid;
+    display: inline-block;
   }
+
   &--all { 
     border-left: $border-solid-6 $blue; 
 
@@ -17,6 +18,7 @@
     .section__item-footer div:last-child,
     .section__item-progress-bar { background-color: $blue;}
   }
+
   &--fresh { 
     border-left: $border-solid-6 $green; 
 
@@ -25,6 +27,7 @@
     .section__item-footer div:last-child,
     .section__item-progress-bar { background-color: $green;}
   }
+
   &--soon { 
     border-left: $border-solid-6 $orange; 
 
@@ -33,6 +36,7 @@
     .section__item-footer div:last-child,
     .section__item-progress-bar { background-color: $orange;}
   }
+
   &--expired { 
     border-left: $border-solid-6 $red; 
 
@@ -41,6 +45,7 @@
     .section__item-footer div:last-child,
     .section__item-progress-bar { background-color: $red;}
   }
+
   &--archive { 
     border-left: $border-solid-6 $gray;
 
@@ -51,9 +56,9 @@
   }
 
   &__list {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: $space-24;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: $space-24;
   }
 }
 
@@ -64,14 +69,14 @@
   gap: $space-5;
 
   &__input {
-  position: relative;
+    position: relative;
   }
 
   &__remove {
-  background: none;
-  border: none;
-  display: none;
-  position: absolute;
+    background: none;
+    border: none;
+    display: none;
+    position: absolute;
   }
 }
 

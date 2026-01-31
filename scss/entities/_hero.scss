@@ -3,35 +3,37 @@
 
 .hero {
   @include section-style;
+
   display: block;
   text-align: center;
   background-color: $white;
 
   h1 {
-  font-size: 40px;
-  margin-bottom: $space-16;
-  color: $gray-blue;
-  font-weight: 700;
+    font-size: 40px;
+    margin-bottom: $space-16;
+    color: $gray-blue;
+    font-weight: 700;
   }
 
   p {
-  font-size: $fs20;
-  color: $gray-lightblue;
-  max-width: $width-600;
-  margin: 0 auto;
-  line-height: 1.8;
+    font-size: $fs20;
+    color: $gray-lightblue;
+    max-width: $width-600;
+    margin: 0 auto;
+    line-height: 1.8;
   }
 
   .calculator {
-  max-width: $width-500;
-  margin: 40px auto 0;
-  padding: $space-24;
-  border-radius: $border-radius-lg;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1)
+    max-width: $width-500;
+    margin: 40px auto 0;
+    padding: $space-24;
+    border-radius: $border-radius-lg;
+    box-shadow: 0 4px 15px rgb(0 0 0 / 10%)
   }
 
   &__form {
-    @include flex--column;
+    @include flex-column;
+
     gap: $space-16;
   }
 }

@@ -1,6 +1,6 @@
 @import 'variables';
 
-//style
+// style
 
 @mixin section-style {
   display: none;
@@ -33,34 +33,34 @@
 }
 
 @mixin nav-list {
- display: flex;
- gap: $space-32;
- justify-content: center;
- max-width: $width-1200;
- margin: 0 auto;
- padding: 0 $space-16;
- align-items: center;
+  display: flex;
+  gap: $space-32;
+  justify-content: center;
+  max-width: $width-1200;
+  margin: 0 auto;
+  padding: 0 $space-16;
+  align-items: center;
 }
 
-//flex
+// flex
 
-@mixin flex--space-between {
+@mixin flex-space-between {
   display: flex;
   justify-content: space-between;
 }
 
-@mixin flex--column {
+@mixin flex-column {
   display: flex;
   flex-direction: column;
 }
 
-@mixin flex--column-and-sb {
+@mixin flex-column-and-sb {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
 
-@mixin flex--center {
+@mixin flex-center {
   display: flex;
   align-items: center;
   justify-content: center;

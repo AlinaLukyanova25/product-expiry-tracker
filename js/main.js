@@ -1,96 +1,100 @@
-import { productsDB } from './storage.js'
+import { productsDB } from './storage.js';
 
-import {initMenu} from './modules/menu.js'
+import {initMenu} from './modules/menu.js';
 
-import { initForms } from './modules/product-form.js'
+import { initForms } from './modules/product-form.js';
 
-import { HeroCalculator } from './modules/hero-calculator.js'
+import { HeroCalculator } from './modules/hero-calculator.js';
 
-import { DateCalculator } from './modules/modal-calculator.js'
+import { DateCalculator } from './modules/modal-calculator.js';
 
-import { calculateDateDifference } from './utils/date-utils.js'
+import { calculateDateDifference } from './utils/date-utils.js';
 
 import {
   renderInitialProducts,
   renderProductsToArchive,
   renderProductsToSection,
   renderAllProducts
-} from './products.js'
+} from './products.js';
 
-import { ModalManager } from './modal.js'
+import { ModalManager } from './modal.js';
 
-import { ExpiryCalendar } from './calendar.js'
+import { ExpiryCalendar } from './calendar.js';
 
-import { FormSearch } from './modules/form-search.js'
+import { FormSearch } from './modules/form-search.js';
 
-import { KeyboardNavigation } from './modules/keyboard-navigation.js'
+import { KeyboardNavigation } from './modules/keyboard-navigation.js';
 
-import { elementCheck } from './utils/dom-utils.js'
+import { elementCheck } from './utils/dom-utils.js';
 
 document.addEventListener('DOMContentLoaded', async function () {
   try {
-  await productsDB.initialize()
+    await productsDB.initialize();
 
-  const heroCalculator = new HeroCalculator()
+    /* eslint-disable no-unused-vars */
+    const heroCalculator = new HeroCalculator();
 
-  const sections = {
-    archive: document.getElementById('archive'),
-    all: document.getElementById('all-products'),
-    soon: document.getElementById('soon-products'),
-    expired: document.getElementById('expired-products'),
-    fresh: document.getElementById('fresh-products'),
-  }
+    const sections = {
+      archive: document.getElementById('archive'),
+      all: document.getElementById('all-products'),
+      soon: document.getElementById('soon-products'),
+      expired: document.getElementById('expired-products'),
+      fresh: document.getElementById('fresh-products'),
+    };
 
-  const searchForm = document.getElementById('form-search')
-  elementCheck(searchForm, 'форма поиска')
+    const searchForm = document.getElementById('form-search');
+    elementCheck(searchForm, 'форма поиска');
 
-  initMenu()
+    initMenu();
 
-  const filterSelect = document.getElementById('sort-filter')
-  elementCheck(filterSelect, 'фильтр сортировки')
+    const filterSelect = document.getElementById('sort-filter');
+    elementCheck(filterSelect, 'фильтр сортировки');
+
+    const calendar = new ExpiryCalendar(productsDB);
     
-  const modalManager = new ModalManager(productsDB, () => renderAllProducts(productsDB, filterSelect, sections))
+    const modalManager = new ModalManager(productsDB, () => renderAllProducts(productsDB, filterSelect, sections), calendar);
 
-  const calendar = new ExpiryCalendar(productsDB, modalManager)
+    initForms(productsDB, () => renderAllProducts(productsDB, filterSelect, sections), calendar);
 
-  initForms(productsDB, () => renderAllProducts(productsDB, filterSelect, sections), calendar)
+    renderInitialProducts(productsDB, filterSelect, sections);
 
-  renderInitialProducts(productsDB, filterSelect, sections)
+    /* eslint-disable no-unused-vars */
+    const dateCalculator = new DateCalculator();
 
-  const dateCalculator = new DateCalculator()
+    /* eslint-disable no-unused-vars */
+    const formSearch = new FormSearch({
+      searchInput: document.getElementById('search'),
+      formSearchBtn: document.querySelector('.form-search__btn'),
+      formSearchClear: document.querySelector('.form-search__remove'),
+      sections,
+      productsDB,
+      filterSelect,
+      renderAllProducts,
+      renderProductsToArchive,
+      renderProductsToSection,
+      calculateDateDifference
+    });
 
-  const formSearch = new FormSearch({
-    searchInput: document.getElementById('search'),
-    formSearchBtn: document.querySelector('.form-search__btn'),
-    formSearchClear: document.querySelector('.form-search__remove'),
-    sections,
-    productsDB,
-    filterSelect,
-    renderAllProducts,
-    renderProductsToArchive,
-    renderProductsToSection,
-    calculateDateDifference
-  })
+    /* eslint-disable no-unused-vars */
+    const keyboardNav = new KeyboardNavigation({
+      modal: document.getElementById('modal'),
+      modalRemove: document.getElementById('modal-remove'),
+      modalReturn: document.getElementById('modal-return'),
+    });
 
-  const keyboardNav = new KeyboardNavigation({
-    modal: document.getElementById('modal'),
-    modalRemove: document.getElementById('modal-remove'),
-    modalReturn: document.getElementById('modal-return'),
-  })
+    searchForm.addEventListener('click', async (e) => {
+      if (!e.target.closest('.form__btn-remove')) return;
+      e.preventDefault();
 
-  searchForm.addEventListener('click', async (e) => {
-    if (!e.target.closest('.form__btn-remove')) return
-    e.preventDefault()
-
-    const activeSection = Object.values(sections).find(section => section.style.display !== 'none');
+      const activeSection = Object.values(sections).find(section => section.style.display !== 'none');
     
-    if (activeSection) {
-      modalManager.openRemoveAllModal(activeSection)
-    }
-  })
+      if (activeSection) {
+        modalManager.openRemoveAllModal(activeSection);
+      }
+    });
     
   } catch {
-    console.error('Ошибка инициализации приложения', error)
-    alert('Произошла ошибка при загрузке приложения. Пожалуйста, обновите страницу.')
+    console.error('Ошибка инициализации приложения', error);
+    alert('Произошла ошибка при загрузке приложения. Пожалуйста, обновите страницу.');
   }
-})
+});

@@ -2,18 +2,20 @@
 @import '../abstracts/mixins';
 
 .form {
-    @include section-style;
-    max-width: $width-600;
+  @include section-style;
 
-    label { font-size: $fs14; }
+  max-width: $width-600;
 
-    &__add {
-        @include flex--column;
-        gap: $space-16;
-    }
+  label { font-size: $fs14; }
 
-    &__content {
-        display: flex;
-        gap: $space-5;
-    }
+  &__add {
+    @include flex-column;
+
+    gap: $space-16;
+  }
+
+  &__content {
+    display: flex;
+    gap: $space-5;
+  }
 }

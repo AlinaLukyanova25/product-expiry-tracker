@@ -6,7 +6,7 @@
     outline: none;
     background-color: $dark-blue;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3)
+    box-shadow: 0 4px 12px rgb(52 152 219 / 30%)
   }
 
   .card:hover {
@@ -15,7 +15,7 @@
   }
 
   .shadow:hover {
-    box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+    box-shadow: 0 0 15px rgb(255 0 0 / 50%);
   }
 
   .modal__calculator:hover {
@@ -25,7 +25,7 @@
 
   .modal__push-archive:hover {
     background-color: $gray;
-    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.1)
+    box-shadow: 0 4px 12px rgb(52 152 219 / 10%)
   }
 
   .section__btn-remove:hover,
@@ -48,8 +48,8 @@
   .image-preview:hover {
     transform: translateY(-4px);
     box-shadow:
-        inset 0 0 0 2px $shadow-blue,
-        0 8px 15px rgba(0,0,0,0.1);
+      inset 0 0 0 2px $shadow-blue,
+      0 8px 15px rgb(0 0 0 / 10%);
   }
 
   .image-preview:hover img {
@@ -120,15 +120,14 @@
     gap: $space-8;
     padding: 0;
     justify-content: space-between;
-    overflow-x: auto;
-    overflow-y: hidden;
+    overflow: auto hidden;
     width: 100%;
     scrollbar-width: none;
     -ms-overflow-style: none;
   }
 
   .nav-list::-webkit-scrollbar {
-  height: 0;
+    height: 0;
   }
   
   .nav-list__item {
@@ -137,15 +136,15 @@
 
   .hero {
     h1 {
-    font-size: $fs32;
+      font-size: $fs32;
     }
 
     p {
-    font-size: $fs16;
+      font-size: $fs16;
     }
 
     &__form.calculator {
-    padding: $space-20;
+      padding: $space-20;
     }
   }
   
@@ -155,57 +154,74 @@
 
   .form {
     @include media-section-style;
+
     justify-content: center;
   }
   
+  .card {
+    &__title {
+      margin: 0;
+      font-weight: $medium;
+      font-size: 15px;
+      padding-right: $space-12;
+    }
+
+    .image-preview {
+      width: $size-100;
+      height: $size-100;
+      margin: 0;
+      flex-shrink: 0;
+    }
+  }
 
   .section {
     @include media-section-style;
 
     h2 {
-    font-size: $fs20;
+      font-size: $fs20;
     }
 
     &__list {
-    grid-template-columns: repeat(1, 1fr);
-    grid-template-rows: repeat(1, 1fr);
-    gap: $space-8;
+      grid-template-columns: repeat(1, 1fr);
+      grid-template-rows: repeat(1, 1fr);
+      gap: $space-8;
     }
 
     .card {
-    flex-direction: row;
-    gap: $space-12;
-    padding: $space-12;
-    align-items: flex-start;
+      flex-direction: row;
+      gap: $space-12;
+      padding: $space-12;
+      align-items: flex-start;
     }
 
     &__item {
-    min-width: auto;
+      min-width: auto;
     }
 
     &__item-header p {
-    font-size: $fs12;
+      font-size: $fs12;
     }
 
     &__item-footer {
-    margin-top: auto;
-    font-size: $fs12;
+      margin-top: auto;
+      font-size: $fs12;
 
-        div:first-child {
+      div:first-child {
         flex-shrink: 0;
         margin-right: 7px;
-        }
+      }
 
-        div:last-child {
+      div:last-child {
         font-size: $fs10;
-        }
+      }
     }
 
     &__item-content,
     &__item-header {
-    @include flex--column;
-    flex: 1;
-    min-width: 0;
+      @include flex-column;
+
+      flex: 1;
+      min-width: 0;
     }
   }
 
@@ -218,31 +234,15 @@
     font-size: $fs10;
   }
 
-  .card {
-    &__title {
-        margin: 0;
-        font-weight: $medium;
-        font-size: 15px;
-        padding-right: $space-12;
-    }
-
-    .image-preview {
-    width: $size-100;
-    height: $size-100;
-    margin: 0;
-    flex-shrink: 0;
-    }
-  }
-
   .form-search {
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
     margin: $space-16;
 
-        &__btn {
-        width: 100%;
-        }
+    &__btn {
+      width: 100%;
+    }
   }
 
   .section__btn-remove, .form__btn-remove {

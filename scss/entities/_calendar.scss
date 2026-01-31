@@ -3,36 +3,40 @@
 
 .calendar {
   @include section-style;
+
   &__header {
-  @include flex--space-between;
-  align-items: center;
-  gap: $space-20;
+    @include flex-space-between;
+
+    align-items: center;
+    gap: $space-20;
   }
 
   &__grid,
   &__weekdays {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  text-align: center;
-  font-weight: $bold;
-  margin-bottom: $space-10;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    font-weight: $bold;
+    margin-bottom: $space-10;
   }
 
   &__day {
-  aspect-ratio: 1;
-  border: $border-solid-1 $white-ddd;
-  border-radius: $border-radius-md;
-  @include flex--column;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  position: relative;
-  transition: $transition-bc;
+    aspect-ratio: 1;
+    border: $border-solid-1 $white-ddd;
+    border-radius: $border-radius-md;
+
+    @include flex-column;
+
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+    transition: $transition-bc;
 
     &:focus-visible {
-        outline: none;
-        box-shadow: none;
-        background-color: $very-light-grey;
+      outline: none;
+      box-shadow: none;
+      background-color: $very-light-grey;
     }
   }
 }
@@ -54,5 +58,6 @@
   width: $size-42;
   height: $size-42;
   font-size: $fs12;
-  @include flex--center;
+
+  @include flex-center;
 }

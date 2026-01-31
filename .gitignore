@@ -1,3 +1,8 @@
 node_modules/
 *.css.map
 .DS_Store
+
+# Скомпилированные файлы
+css/
+dist/
+node_modules/

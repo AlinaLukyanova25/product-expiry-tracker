@@ -10,7 +10,7 @@
     }
 
     &__title {
-    @include modal-title;
+      @include modal-title;
     }
 
     &__push-archive { background-color: $light-gray;}
@@ -22,24 +22,29 @@
 
   .modal-calendar {
     &__content {
-    height: 100%;
-    @include flex--column;
-    gap: $space-8;
+      height: 100%;
 
-     ul {
-    @include flex--column;
-    gap: $space-10;
-    max-height: 566px;
-    overflow: auto;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    } 
+      @include flex-column;
+
+      gap: $space-8;
+
+      ul {
+        @include flex-column;
+
+        gap: $space-10;
+        max-height: 566px;
+        overflow: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+      } 
     }
 
     &__list-content {
-    width: 100%;
-    @include flex--column;
-    justify-content: space-around;
+      width: 100%;
+
+      @include flex-column;
+
+      justify-content: space-around;
     }
   } 
 }
@@ -50,7 +55,9 @@
 .modal-form-calculator.open,
 .modal-remove.open-remove {
   max-width: $width-500;
-  @include flex--column;
+
+  @include flex-column;
+
   gap: $space-8;
   position: fixed;
   top: 50px;
@@ -61,7 +68,7 @@
   z-index: 999999;
   padding: $space-24;
   border-radius: $border-radius-lg;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 15px rgb(0 0 0 / 40%);
 }
 
 .modal.open + .modal-backdrop,
@@ -73,11 +80,8 @@
 .modal-backdrop-default {
   display: none;
   position: fixed;
-  top: 0;
-  right: 0;
-  left: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, .6);
+  inset: 0;
+  background: rgb(0 0 0 / 60%);
   overflow: hidden;
 }
 
@@ -88,9 +92,9 @@
   padding-bottom: $space-8;
 
   &__buttons {
-  display: flex;
-  justify-content: center;
-  gap: $space-20;
+    display: flex;
+    justify-content: center;
+    gap: $space-20;
   }
 }
 
@@ -123,26 +127,27 @@
   flex-direction: row;
   gap: $space-10;
 
-    .image-preview {
+  .image-preview {
     width: $size-100;
     height: $size-100;
     min-width: $size-100;
     min-height: 100%;
     margin: 0;
     flex-shrink: 0;
-    }
+  }
 
-    &__footer {
-    @include flex--space-between;
+  &__footer {
+    @include flex-space-between;
+
     align-items: center;
 
-      div:first-child {
+    div:first-child {
       color: $gray-blue;
       font-weight: $medium;
       margin-right: $space-15;
-      }
+    }
 
-      div:last-child {
+    div:last-child {
       background-color: $blue;
       color: $white;
       padding: $space-4 $space-12;

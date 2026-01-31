@@ -10,9 +10,9 @@
 }
 
 .calculator {
-    &__title {
-        @include modal-title;
-    }
+  &__title {
+    @include modal-title;
+  }
 
-    label { font-size: $fs14; }
+  label { font-size: $fs14; }
 }

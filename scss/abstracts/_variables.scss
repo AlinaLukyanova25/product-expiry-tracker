@@ -4,7 +4,7 @@ $red: #e74c3c;
 $blue: #3498db;
 $green: #27ae60;
 $orange: #f39c12;
-$gray: #777777;
+$gray: #777;
 $white: white;
 $light-gray: #95a5a6;
 $light-grey-blue: #f5f7fa;
@@ -18,15 +18,13 @@ $light-marble: #f8f9fa;
 $gray-lightblue: #7f8c8d;
 $shadow-blue: #dee2e6;
 $dark-blue: #2980b9;
-
-$box-shadow-012: 0 6px 20px rgba(0, 0, 0, 0.12);
-$box-shadow-01: 0 0 0 3px rgba(52, 152, 219, 0.1);
-$box-shadow-008: 0 4px 15px rgba(0, 0, 0, 0.08);
+$box-shadow-012: 0 6px 20px rgb(0 0 0 / 12%);
+$box-shadow-01: 0 0 0 3px rgb(52 152 219 / 10%);
+$box-shadow-008: 0 4px 15px rgb(0 0 0 / 8%);
 $transition-all: all 0.3s ease;
 $transition-width: width 0.3s ease;
 $transition-bc: background-color .2s;
 $transition-transform: transform 0.3s ease;
-
 $space-32: 32px;
 $space-24: 24px;
 $space-20: 20px;
@@ -38,7 +36,6 @@ $space-8: 8px;
 $space-5: 5px;
 $space-4: 4px;
 $space-2: 2px;
-
 $fs32: 32px;
 $fs24: 24px;
 $fs20: 20px;
@@ -47,28 +44,23 @@ $fs16: 16px;
 $fs14: 14px;
 $fs12: 12px;
 $fs10: 10px;
-
 $border-radius-xl: 20px;
 $border-radius-lg: 12px;
 $border-radius-md: 8px;
 $border-radius-6: 6px;
-
 $border-solid-6: 6px solid;
 $border-solid-2: 2px solid;
 $border-solid-1: 1px solid;
-
 $width-1200: 1200px;
 $width-600: 600px;
 $width-500: 500px;
 $size-100: 100px;
 $size-50: 50px;
 $size-42: 42px;
-
 $regular: 400;
 $medium: 500;
 $semibold: 600;
 $bold: 700;
-
 $breakpoint-tablet: 814px;
 $breakpoint-desktop: 1210px;
 $has-hover: "(any-hover: hover)";

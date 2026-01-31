@@ -5,11 +5,23 @@
   "license": "ISC",
   "author": "Алина",
   "scripts": {
-    "sass": "sass --watch scss:css",
-    "build": "sass scss:css --style compressed",
-    "dev": "sass --watch scss:css"
+    "dev": "sass --watch scss:css",
+    "build:scss": "sass scss:dist/css --style compressed",
+    "build": "npm run build:scss && npm run copy",
+    "copy": "npx copyfiles -u 1 \"**/*.{html,js,png,svg,jpg,gif,json,ico}\" \"!node_modules\" \"!scss\" \"!dist\" dist/",
+    "lint:js": "eslint js/**/*.js",
+    "lint:css": "stylelint scss/**/*.scss",
+    "lint": "npm run lint:js && npm run lint:css",
+    "lint:fix:js": "eslint js/**/*.js --fix",
+    "lint:fix:css": "stylelint scss/**/*.scss --fix"
   },
   "devDependencies": {
-    "sass": "^1.97.2"
+    "@eslint/js": "^9.39.2",
+    "copyfiles": "^2.4.1",
+    "eslint": "^9.39.2",
+    "sass": "^1.97.2",
+    "stylelint": "^15.11.0",
+    "stylelint-config-standard-scss": "^11.1.0",
+    "stylelint-scss": "^5.3.1"
   }
 }
