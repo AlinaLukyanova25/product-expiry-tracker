@@ -22,23 +22,30 @@ jobs:
         cache: 'npm'
    
     - name: Install dependencies
-      run: npm install
+      run: npm ci
    
     - name: Build project
       run: |
         mkdir -p build_output
        
-        cp -r img build_output/ || true
-        cp -r js build_output/ || true
-        cp index.html build_output/ || true
-        cp README.md build_output/ || true
+        cp index.html build_output/
+        if [ -d "img" ]; then cp -r img build_output/; fi
        
+        mkdir -p build_output/js
+       
+        echo "Минификация JavaScript..."
+        find js -name "*.js" | while read file; do
+          mkdir -p "build_output/$(dirname "$file")"
+          npx terser "$file" -o "build_output/$file" --compress --no-mangle
+          echo "Минифицирован: $file"
+        done
+       
+        echo "Компиляция SCSS..."
         npx sass scss:build_output/css --style compressed --no-source-map
        
-        rm -rf build_output/scss || true
-        rm build_output/package.json build_output/package-lock.json || true
+        touch build_output/.nojekyll
        
-        echo "Build completed!"
+        echo "Сборка завершена. Содержимое build_output:"
         ls -la build_output/
    
     - name: Deploy to build branch

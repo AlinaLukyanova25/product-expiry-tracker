@@ -7,8 +7,9 @@
   "scripts": {
     "dev": "sass --watch scss:css",
     "build:scss": "sass scss:dist/css --style compressed",
-    "build": "npm run build:scss && npm run copy",
+    "build:js": "terser js/**/*.js -o dist/js/ --compress --no-mangle",
     "copy": "npx copyfiles -u 1 \"**/*.{html,js,png,svg,jpg,gif,json,ico}\" \"!node_modules\" \"!scss\" \"!dist\" dist/",
+    "build": "npm run build:scss && npm run build:js && npm run copy",
     "lint:js": "eslint js/**/*.js",
     "lint:css": "stylelint scss/**/*.scss",
     "lint": "npm run lint:js && npm run lint:css",
@@ -22,6 +23,7 @@
     "sass": "^1.97.2",
     "stylelint": "^15.11.0",
     "stylelint-config-standard-scss": "^11.1.0",
-    "stylelint-scss": "^5.3.1"
+    "stylelint-scss": "^5.3.1",
+    "terser": "5.46.0"
   }
 }
