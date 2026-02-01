@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+    <link rel="shortcut icon" href="img/favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="img/favicon.png">
+    <title>Трекер сроков годности</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header class="header">
+  <nav class="nav">
+    <ul class="nav-list--header">
+      <li class="nav-list__item">
+        <a href="#form" class="nav-list__link nav-list__item--add">
+          Добавление продукта
+        </a>
+      </li>
+      <li class="nav-list__item nav-list__item--calendar">
+        <a href="#section-calendar" class="nav-list__link nav-list__calendar"><img class="nav-list__img" src="img/calendar-icon.svg" alt="Календарь"></a>
+      </li>
+    </ul>
+    <ul class="nav-list">
+      <li class="nav-list__item">
+        <a href="#all-products" class="nav-list__link">Все продукты</a>
+      </li>
+      <li class="nav-list__item">
+        <a href="#fresh-products" class="nav-list__link">Свежие продукты</a>
+      </li>
+      <li class="nav-list__item">
+        <a href="#soon-products" class="nav-list__link">Скоро испортятся</a>
+      </li>
+      <li class="nav-list__item">
+        <a href="#expired-products" class="nav-list__link">Просроченные</a>
+      </li>
+      <li class="nav-list__item">
+        <a href="#archive" class="nav-list__link">Архив</a>
+      </li>
+    </ul>
+  </nav>
+</header>
+<main>
+  <form class="form-search" action="/search" method="get" id="form-search">  
+  <label class="form-search__label" for="sort-filter">Сортировать по:</label>
+<select class="input-field form-search__select" id="sort-filter" name="sort">
+  <option value="date" selected>Дата</option>
+  <option value="name">Название</option>
+</select>  
+<button class="btn-remove form__btn-remove" type="button" style="position: static;">&#128465;&#65039;</button>
+<input class="input-field form-search__input" id="search" type="text" name="query" placeholder="Поиск..." style="width: 100%;">  
+<button class="form-search__remove" type="button" aria-label="Очистить поле поиска"><img src="img/clear-button.svg" alt="" width="20" height="20" aria-hidden="true"></button>
+<button class="btn form-search__btn" type="submit">Искать</button>
+</form> 
+  <section class="hero" id="hero">
+  <h1>Трекер сроков годности</h1>
+<p>Это приложение поможет вам отслеживать сроки годности на продуктах и избавляться от просрочки вовремя</p>
+    <form class="hero__form calculator" id="calculator">
+      <h2 class="calculator__title">Калькулятор</h2>
+      <label for="date-start">Дата изготовления</label>
+      <input class="input-field calculator__date-start" id="date-start" type="date" style="width: 100%;">
+      <label for="days">Срок годности, дней</label>
+      <input class="input-field calculator__days" id="days" type="number" min="1" style="width: 100%;">
+      <label for="months">Срок годности, месяцев</label> 
+      <input class="input-field calculator__months" id="months" type="number" min="1" style="width: 100%;">
+      <label for="end">Дата окончания СГ</label>
+      <div class="input-field date-end" id="end" aria-live="polite"></div>
+      <button class="btn" id="calc-btn" type="submit">OK</button>
+      <button class="btn" id="calc-add" style="display: none;">Добавить продукт</button>
+    </form>
+  </section>
+  <section class="form" id="form">
+    <form id="add-form" class="form__add">
+      <div class="image-preview" tabindex="0">
+        </div>
+      <input type="file"
+        id="file-${card.id}"
+        accept="image/*"
+        style="display: none;">
+      <label for="name-product">Название продукта</label>
+  <input class="input-field" id="name-product" type="text" placeholder="Введите название продукта" style="width: 100%;" required>
+  <label for="date-manufacture">Дата изготовления</label>
+      <input class="input-field" id="date-manufacture" type="date" style="width: 100%;" required>
+      <label for="end-date">Дата окончания срока</label>
+  <input class="input-field" id="end-date" type="date" style="width: 100%;" required>
+    <label for="category">Категория продукта</label>
+    <div class="form__content">
+  <select class="input-field" id="category" style="width: 100%;">
+    <option value="milk">Молочная продукция</option>
+    <option value="cheese">Сыры</option>
+    <option value="sausage">Колбаса</option>
+    <option value="meat">Курица/мясо</option>
+    <option value="fish">Рыба</option>
+    <option value="frozen-food">Замороженная продукция</option>
+    <option value="baby-food">Детское питание</option>
+    <option value="eggs">Яйца</option>
+    <option value="bread">Хлеб и хлебобулочные изделия</option>
+    <option value="cooking">Кулинария</option>
+    <option value="cakes">Торты/пирожные</option>
+    <option value="fresh">Овощи и фрукты</option>
+    <option value="preserves">Консервы</option>
+    <option value="sweets">Кондитерские изделия</option>
+    <option value="groceries">Бакалея</option>
+    <option value="snacks">Снеки</option>
+    <option value="tea-coffee">Чай/кофе</option>
+    <option value="non-alc">Безалкогольные напитки</option>
+    <option value="alc">Алкогольные напитки</option>
+    <option value="сosmetics">Косметика</option>
+  </select>
+  <button class="modal__calculator" type="button" aria-label="Открыть калькулятор"><img class="modal__img" src="img/calculator.svg" alt="" aria-hidden="true"></button>
+  </div>
+  <button class="btn add__btn" id="add-button" type="submit">Добавить продукт</button>
+</form>
+  </section>
+  
+  <section class="section section--all" id="all-products">
+
+    <h2 class="section__title">Все продукты</h2>
+    <ul class="section__list"><p>Пока ничего нет...</p>
+    </ul>
+  </section>
+  
+  <section class="section section--fresh" id="fresh-products">
+    <h2 class="section__title">Свежие продукты</h2>
+    <ul class="section__list"><p>Пока ничего нет...</p></ul>
+  </section>
+  
+  <section class="section section--soon" id="soon-products">
+    <h2 class="section__title">Скоро испортятся</h2>
+    <ul class="section__list"><p>Пока ничего нет...</p></ul>
+  </section>
+  
+  <section class="section section--expired" id="expired-products">
+    <h2 class="section__title">Просроченные</h2>
+    <ul class="section__list"><p>Пока ничего нет...</p></ul>
+  </section>
+
+  <section class="section section--archive" id="archive">
+    <h2 class="section__title">Архив</h2>
+    <ul class="section__list">
+      <p>Пока ничего нет...</p>
+    </ul>
+  </section>
+
+  <section class="calendar" id="section-calendar">
+    <div class="calendar__header">
+      <button class="arrow" id="prev-month" type="button" aria-label="Предыдущий месяц"><img src="img/arrow-left.svg" alt=""></button>
+      <h2 class="calendar__title" id="current-month"></h2>
+      <button class="arrow" id="next-month" type="button" aria-label="Следующий месяц"><img src="img/arrow-right.svg" alt=""></button>
+    </div>
+
+    <div class="calendar__weekdays">
+      <div>ПН</div>
+      <div>ВТ</div>
+      <div>СР</div>
+      <div>ЧТ</div>
+      <div>ПТ</div>
+      <div>СБ</div>
+      <div>ВС</div>
+    </div>
+
+    <div id="calendar" class="calendar__grid">
+      
+    </div>
+  </section>
+
+  <form class="modalDefault modal" id="modal" data-modal-id="product-card" tabindex="-1" role="dialog" aria-modal="true">
+  </form>
+  <div class="modal-backdrop-default modal-backdrop" id="backdrop"></div>
+
+  <div class="modalDefault modal-remove" id="modal-remove" tabindex="-1" role="dialog" aria-modal="true">
+  </div>
+  <div class="modal-backdrop-default modal-remove-backdrop" id="remove-backdrop"></div>
+
+  <form class="modalDefault modal-return" id="modal-return" data-modal-id="archive-card" tabindex="-1" role="dialog" aria-modal="true">
+  </form>
+  <div class="modal-backdrop-default modal-return-backdrop" id="return-backdrop"></div>
+
+  <div class="modalDefault modal-calendar" tabindex="-1" role="dialog" aria-modal="true"></div>
+  <div class="modal-backdrop-default backdrop-calendar" id="backdrop-calendar"></div>
+
+  <form class="modalDefault modal-form-calculator calculator" id="modal-calculator" tabindex="-1" role="dialog" aria-modal="true">
+  </form>
+  <div class="modal-backdrop-default backdrop-calculator" id="backdrop-calculator"></div>
+</main>
+    <script src="https://unpkg.com/numeralize-ru/lib/index.browser.js"></script>
+    <script type="module" src="js/main.js"></script>
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
