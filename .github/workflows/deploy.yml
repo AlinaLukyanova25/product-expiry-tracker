@@ -1,11 +1,14 @@
-name: Build and Deploy
+name: Build and Deploy to Build Branch
 
 on:
   push:
     branches: [ main ]
 
+permissions:
+  contents: write
+
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
    
     steps:
@@ -16,24 +19,33 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: '18'
+        cache: 'npm'
    
     - name: Install dependencies
       run: npm install
    
     - name: Build project
       run: |
-        mkdir -p dist
+        mkdir -p build_output
        
-        # Копируем все файлы кроме ненужных
-        cp -r img dist/
-        cp -r js dist/
-        cp index.html dist/
+        cp -r img build_output/ || true
+        cp -r js build_output/ || true
+        cp index.html build_output/ || true
+        cp README.md build_output/ || true
        
-        npx sass scss:dist/css --style compressed
+        npx sass scss:build_output/css --style compressed --no-source-map
+       
+        rm -rf build_output/scss || true
+        rm build_output/package.json build_output/package-lock.json || true
+       
+        echo "Build completed!"
+        ls -la build_output/
    
     - name: Deploy to build branch
-      uses: JamesIves/github-pages-deploy-action@v4
+      uses: peaceiris/actions-gh-pages@v3
       with:
-        folder: dist
-        branch: build
-        clean: true
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./build_output
+        publish_branch: build
+        force_orphan: true
+        keep_files: false
