@@ -348,7 +348,7 @@ export class ExpiryCalendar {
   }
 
   changeMonth(direction) {
-    this.currentDate.setDate(1)
+    this.currentDate.setDate(1);
     this.currentDate.setMonth(this.currentDate.getMonth() + direction);
     this.renderCalendar();
   }
@@ -363,9 +363,9 @@ export class ExpiryCalendar {
         <h2 class="modal__title">${card.name}</h2>
         <div class="image-preview" id="preview-${card.id}" tabindex="0">
             ${card.image
-        ? `<img src="${card.image}" alt="${card.name}">`
-        : ''
-    }
+    ? `<img src="${card.image}" alt="${card.name}">`
+    : ''
+}
             </div>
           <input type="file"
             id="file-${card.id}"

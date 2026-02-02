@@ -189,7 +189,7 @@ export class ModalManager {
         await this.handleAllProductsRemove();
       }
       this.closeModalRemove();
-      await this.calendar.update()
+      await this.calendar.update();
     }
   }
 
@@ -352,7 +352,7 @@ export class ModalManager {
       await this.productsDB.updateProduct(productToUpdate);
       await this.renderAllProducts();
       this.closeModal(); 
-      await this.calendar.update()
+      await this.calendar.update();
 
       this.clearSearch();
     } else {
@@ -389,7 +389,7 @@ export class ModalManager {
         
     this.closeModalReturn();
 
-    await this.calendar.update()
+    await this.calendar.update();
   }
 
   async pushToArchive(e) {

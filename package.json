@@ -13,6 +13,7 @@
     "lint:js": "eslint js/**/*.js",
     "lint:css": "stylelint scss/**/*.scss",
     "lint": "npm run lint:js && npm run lint:css",
+    "lint:fix": "npm run lint:fix:js && npm run lint:fix:css",
     "lint:fix:js": "eslint js/**/*.js --fix",
     "lint:fix:css": "stylelint scss/**/*.scss --fix"
   },
